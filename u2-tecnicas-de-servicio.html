@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Técnicas de servicio · Unidad 2 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:840px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  h3.sub{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;color:var(--ink);margin:1.6rem 0 .5rem;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  ul.plain{margin:0 0 1rem 1.2rem;}
+  ul.plain li{margin-bottom:.45rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== STEP WIZARD WITH RING ===== */
+  .wizard{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;
+    padding:1.8rem;margin:1.4rem 0 1.8rem;display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap;
+  }
+  .ring-wrap{position:relative;width:110px;height:110px;flex-shrink:0;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-bg{fill:none;stroke:rgba(38,33,28,.12);stroke-width:8;}
+  .ring-fill{fill:none;stroke:var(--gold);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s;}
+  .ring-label{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;
+    font-family:'Space Mono',monospace;
+  }
+  .ring-label .rn{font-size:1.4rem;font-weight:700;color:var(--bordeaux);}
+  .ring-label .rt{font-size:.62rem;opacity:.7;}
+  .wizard-content{flex:1;min-width:220px;}
+  .wizard-content h4{font-family:'Fraunces',serif;color:var(--bordeaux);font-size:1.1rem;margin-bottom:.5rem;}
+  .wizard-content p{font-size:.92rem;margin-bottom:1rem;}
+  .wizard-nav{display:flex;gap:.6rem;}
+  .wiz-btn{
+    font-family:'Space Mono',monospace;font-size:.78rem;background:var(--bordeaux);color:var(--linen-light);
+    border:none;padding:.55rem 1rem;border-radius:4px;cursor:pointer;
+  }
+  .wiz-btn:disabled{opacity:.35;cursor:default;}
+  .wiz-btn.ghost{background:none;color:var(--teal);border:1px solid var(--teal);}
+
+  /* ===== TEMPERATURE BAR CHART ===== */
+  .temp-chart{margin:1.4rem 0 1.8rem;}
+  .temp-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.9rem;}
+  .temp-name{width:110px;flex-shrink:0;font-size:.85rem;font-weight:600;}
+  .temp-track{flex:1;height:10px;background:rgba(38,33,28,.1);border-radius:5px;position:relative;}
+  .temp-fill{position:absolute;top:0;left:0;height:100%;border-radius:5px;background:linear-gradient(90deg,#7fb3c9,var(--teal));}
+  .temp-val{width:70px;flex-shrink:0;font-family:'Space Mono',monospace;font-size:.75rem;color:var(--teal);text-align:right;}
+
+  /* ===== WINE TEMP SLIDER GAME ===== */
+  .slider-game{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.5rem;margin-bottom:1rem;}
+  .slider-game h4{font-family:'Fraunces',serif;color:var(--bordeaux);font-size:1.02rem;margin-bottom:.3rem;}
+  .slider-game .sg-hint{font-size:.82rem;opacity:.7;margin-bottom:.9rem;}
+  .slider-row{display:flex;align-items:center;gap:1rem;}
+  .slider-row input[type=range]{flex:1;accent-color:var(--bordeaux);}
+  .slider-readout{font-family:'Space Mono',monospace;font-size:.85rem;width:56px;text-align:right;color:var(--bordeaux);font-weight:700;}
+  .sg-check-btn{
+    font-family:'Space Mono',monospace;font-size:.75rem;background:var(--teal);color:#fff;
+    border:none;padding:.5rem .9rem;border-radius:4px;cursor:pointer;margin-top:.8rem;
+  }
+  .sg-feedback{font-size:.85rem;font-style:italic;margin-top:.6rem;min-height:1.1rem;}
+
+  /* ===== MULTI-SELECT QUIZ ===== */
+  .ms-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.5rem;margin:1.4rem 0;}
+  .ms-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:1rem;font-size:1.02rem;}
+  .ms-opt{display:flex;align-items:flex-start;gap:.6rem;padding:.6rem 0;border-bottom:1px dotted rgba(38,33,28,.15);font-size:.9rem;cursor:pointer;}
+  .ms-opt input{margin-top:.2rem;accent-color:var(--bordeaux);}
+  .ms-opt.correct-mark{color:var(--ok);}
+  .ms-opt.wrong-mark{color:var(--bad);}
+  .ms-verify-btn{
+    font-family:'Space Mono',monospace;font-size:.78rem;background:var(--bordeaux);color:var(--linen-light);
+    border:none;padding:.6rem 1.1rem;border-radius:4px;cursor:pointer;margin-top:1rem;
+  }
+  .ms-feedback{font-size:.85rem;font-style:italic;margin-top:.7rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+
+  @media(max-width:560px){.wizard{flex-direction:column;text-align:center;}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 02 · Tema 2 · Último de la unidad</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 02 · Técnicas y Tipos de Servicio</div>
+  <h1 class="title">Técnicas de Servicio</h1>
+  <p class="subtitle">Descorche, servicio de bebidas y servicio de vinos: el detalle que se nota</p>
+</header>
+
+<main>
+
+  <p class="lead">Más allá del estilo general de servicio, existen técnicas específicas que todo mesero y
+  sommelier deben dominar: cómo se abre una botella frente al cliente, cómo se sirve una bebida sin
+  derramarla y a qué temperatura exacta debe llegar cada vino a la mesa.</p>
+
+  <h2 class="section-title"><span class="num">7.1</span> Descorche</h2>
+  <p>El descorche es el ritual de abrir una botella de vino frente al comensal. Cada paso tiene una razón
+  técnica, no es solo protocolo decorativo.</p>
+  <p class="hint">Usa "Siguiente" para recorrer el procedimiento completo.</p>
+
+  <div class="wizard">
+    <div class="ring-wrap">
+      <svg width="110" height="110" viewBox="0 0 110 110">
+        <circle class="ring-bg" cx="55" cy="55" r="46"/>
+        <circle class="ring-fill" id="ring-fill" cx="55" cy="55" r="46" stroke-dasharray="289" stroke-dashoffset="289"/>
+      </svg>
+      <div class="ring-label"><span class="rn" id="ring-num">1</span><span class="rt">de 7</span></div>
+    </div>
+    <div class="wizard-content">
+      <h4 id="wiz-title"></h4>
+      <p id="wiz-text"></p>
+      <div class="wizard-nav">
+        <button class="wiz-btn ghost" id="wiz-prev">‹ Anterior</button>
+        <button class="wiz-btn" id="wiz-next">Siguiente ›</button>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="num">7.2</span> Servicio de bebidas</h2>
+  <ul class="plain">
+    <li>Toda bebida se sirve por la <strong>derecha</strong> del comensal, sosteniendo la botella por el
+    cuerpo, no por el cuello.</li>
+    <li>La copa se rellena <strong>antes de vaciarse por completo</strong>, nunca se espera a que quede seca.</li>
+    <li>Nunca se toca el borde ni el interior de la copa con los dedos al servir.</li>
+    <li>Se coloca una servilleta doblada bajo la botella para evitar goteo sobre el mantel.</li>
+    <li>Bebidas calientes se anuncian antes de colocarlas: "cuidado, está caliente" evita accidentes.</li>
+  </ul>
+
+  <h3 class="sub">Temperatura ideal de servicio</h3>
+  <p class="hint">Referencia visual de temperatura de servicio (escala 0–100 °C):</p>
+  <div class="temp-chart" id="temp-chart"></div>
+
+  <h2 class="section-title"><span class="num">7.3</span> Servicio de vinos</h2>
+  <p>El vino es la bebida más sensible a la temperatura: servirlo demasiado frío o demasiado caliente
+  puede opacar sus aromas por completo. Pon a prueba tu criterio — mueve cada control a la temperatura
+  que creas correcta y verifica:</p>
+
+  <div id="slider-games"></div>
+
+  <h2 class="section-title"><span class="num">7.4</span> Autoevaluación</h2>
+  <div class="ms-box">
+    <div class="ms-q">¿Cuáles de las siguientes acciones forman parte del protocolo correcto de descorche? (selecciona todas las correctas)</div>
+    <label class="ms-opt"><input type="checkbox" value="1" data-correct="true">Presentar la etiqueta de la botella al anfitrión antes de abrirla</label>
+    <label class="ms-opt"><input type="checkbox" value="2" data-correct="false">Servir primero al mesero para que pruebe el vino</label>
+    <label class="ms-opt"><input type="checkbox" value="3" data-correct="true">Oler el corcho para detectar defectos antes de servir</label>
+    <label class="ms-opt"><input type="checkbox" value="4" data-correct="false">Llenar la copa hasta el borde para rendir más la botella</label>
+    <label class="ms-opt"><input type="checkbox" value="5" data-correct="true">Ofrecer una pequeña cata al anfitrión antes de servir al resto de la mesa</label>
+    <button class="ms-verify-btn" id="ms-verify">Verificar respuestas</button>
+    <div class="ms-feedback" id="ms-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u2-tipos-de-servicio.html">← Anterior: Tipos de servicio</a>
+  <a href="index.html">Índice</a>
+  <a href="u3-historia-del-bar.html">Siguiente: Unidad 03 · Historia del bar →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 02 · Tema: Técnicas de servicio</footer>
+
+<script>
+  // Step wizard
+  const steps = [
+    {t:"Presentar la botella", d:"Se muestra la etiqueta al anfitrión, con la botella en posición horizontal, para que confirme que es el vino que ordenó."},
+    {t:"Cortar la cápsula", d:"Con el cuchillo del sacacorchos sommelier, se corta el sello por debajo del borde de la botella, girando, no cortando en línea recta."},
+    {t:"Limpiar la boca de la botella", d:"Se pasa un paño limpio sobre la boca de la botella para retirar cualquier residuo antes de insertar el sacacorchos."},
+    {t:"Extraer el corcho", d:"Se inserta el sacacorchos en el centro y se extrae con un movimiento firme y silencioso, evitando el 'pop' brusco."},
+    {t:"Oler el corcho", d:"Se huele el corcho para detectar signos de defecto, como moho o sequedad excesiva, señal de un vino oxidado."},
+    {t:"Servir la cata al anfitrión", d:"Se sirve una pequeña cantidad al anfitrión de la mesa para su aprobación antes de continuar con el resto."},
+    {t:"Servir a los comensales", d:"Se sirve al resto de la mesa en sentido de las manecillas del reloj, respetando el orden de cortesía, y al anfitrión al final."}
+  ];
+  let wizIndex = 0;
+  const ringFill = document.getElementById('ring-fill');
+  const CIRC = 289;
+  function renderWizard(){
+    const s = steps[wizIndex];
+    document.getElementById('wiz-title').textContent = (wizIndex+1) + '. ' + s.t;
+    document.getElementById('wiz-text').textContent = s.d;
+    document.getElementById('ring-num').textContent = wizIndex+1;
+    const pct = (wizIndex+1)/steps.length;
+    ringFill.style.strokeDashoffset = CIRC - (CIRC*pct);
+    document.getElementById('wiz-prev').disabled = wizIndex===0;
+    document.getElementById('wiz-next').disabled = wizIndex===steps.length-1;
+  }
+  document.getElementById('wiz-prev').addEventListener('click', ()=>{ if(wizIndex>0){wizIndex--; renderWizard();} });
+  document.getElementById('wiz-next').addEventListener('click', ()=>{ if(wizIndex<steps.length-1){wizIndex++; renderWizard();} });
+  renderWizard();
+
+  // Temperature chart (0-100 scale)
+  const temps = [
+    {n:"Agua / refresco", v:6},
+    {n:"Cerveza lager", v:6},
+    {n:"Vino blanco", v:10},
+    {n:"Vino tinto", v:17},
+    {n:"Café", v:82}
+  ];
+  const chartEl = document.getElementById('temp-chart');
+  temps.forEach(t=>{
+    const row = document.createElement('div');
+    row.className = 'temp-row';
+    row.innerHTML = `<div class="temp-name">${t.n}</div>
+      <div class="temp-track"><div class="temp-fill" style="width:${t.v}%"></div></div>
+      <div class="temp-val">${t.v} °C</div>`;
+    chartEl.appendChild(row);
+  });
+
+  // Wine slider game
+  const wines = [
+    {n:"Espumoso / Champagne", min:6, max:8},
+    {n:"Vino blanco", min:8, max:12},
+    {n:"Tinto ligero (ej. Pinot Noir)", min:14, max:16},
+    {n:"Tinto robusto (ej. Cabernet)", min:16, max:18}
+  ];
+  const gamesEl = document.getElementById('slider-games');
+  wines.forEach((w,idx)=>{
+    const box = document.createElement('div');
+    box.className = 'slider-game';
+    box.innerHTML = `
+      <h4>${w.n}</h4>
+      <div class="sg-hint">¿A qué temperatura (°C) se debe servir?</div>
+      <div class="slider-row">
+        <input type="range" min="0" max="25" value="12" id="sg-range-${idx}">
+        <div class="slider-readout" id="sg-val-${idx}">12°C</div>
+      </div>
+      <button class="sg-check-btn" data-idx="${idx}">Verificar</button>
+      <div class="sg-feedback" id="sg-feedback-${idx}"></div>
+    `;
+    gamesEl.appendChild(box);
+  });
+  wines.forEach((w,idx)=>{
+    const range = document.getElementById('sg-range-'+idx);
+    const val = document.getElementById('sg-val-'+idx);
+    range.addEventListener('input', ()=>{ val.textContent = range.value+'°C'; });
+  });
+  document.querySelectorAll('.sg-check-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = btn.dataset.idx;
+      const w = wines[idx];
+      const v = parseInt(document.getElementById('sg-range-'+idx).value,10);
+      const fb = document.getElementById('sg-feedback-'+idx);
+      if(v >= w.min && v <= w.max){
+        fb.textContent = '✓ ¡Correcto! El rango ideal es ' + w.min + '–' + w.max + ' °C.';
+        fb.style.color = '#3F5D58';
+      }else{
+        fb.textContent = '✕ No exacto — el rango ideal es ' + w.min + '–' + w.max + ' °C.';
+        fb.style.color = '#8C3B3B';
+      }
+    });
+  });
+
+  // Multi-select quiz
+  document.getElementById('ms-verify').addEventListener('click', ()=>{
+    const opts = document.querySelectorAll('.ms-opt');
+    let allCorrect = true;
+    opts.forEach(opt=>{
+      const input = opt.querySelector('input');
+      const shouldBeChecked = input.dataset.correct === 'true';
+      opt.classList.remove('correct-mark','wrong-mark');
+      if(input.checked === shouldBeChecked){
+        opt.classList.add('correct-mark');
+      }else{
+        opt.classList.add('wrong-mark');
+        allCorrect = false;
+      }
+    });
+    const fb = document.getElementById('ms-feedback');
+    fb.textContent = allCorrect ? '¡Perfecto! Identificaste correctamente todas las acciones.' : 'Algunas opciones están mal marcadas — revisa las que quedaron en rojo.';
+    fb.style.color = allCorrect ? '#3F5D58' : '#8C3B3B';
+  });
+</script>
+
+</body>
+</html>

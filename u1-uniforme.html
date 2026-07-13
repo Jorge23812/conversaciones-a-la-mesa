@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uniforme · Unidad 1 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E;
+    --bordeaux-dark:#3E1020;
+    --gold:#C9A15A;
+    --linen:#EDE6D6;
+    --linen-light:#F7F3E8;
+    --ink:#26211C;
+    --teal:#3F5D58;
+    --teal-light:#E4EDEB;
+    --ok:#3F5D58;
+    --bad:#8C3B3B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.65;
+    padding-bottom:6rem;
+  }
+  a{color:inherit;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);
+    color:var(--linen-light);
+    padding:.9rem 1.5rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:.6rem;
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{
+    background:var(--bordeaux);
+    color:var(--linen-light);
+    padding:3.4rem 1.5rem 3rem;
+    text-align:center;
+    position:relative;
+  }
+  header.hero::before{
+    content:"";
+    position:absolute;
+    inset:12px;
+    border:1px solid rgba(201,161,90,0.4);
+    pointer-events:none;
+  }
+  .unit-tag{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1.2rem;
+  }
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(2.2rem,5.5vw,3.6rem);
+    letter-spacing:-.01em;
+  }
+  .subtitle{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--gold);
+    margin-top:.7rem;
+  }
+
+  main{max-width:800px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.65rem;
+    color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+  }
+  h2.section-title .num{
+    font-family:'Space Mono',monospace;
+    font-size:.8rem;
+    background:var(--bordeaux);
+    color:var(--gold);
+    padding:.25rem .55rem;
+    border-radius:2px;
+  }
+  p{margin-bottom:1rem;font-size:1rem;}
+  ul.plain{margin:0 0 1rem 1.2rem;}
+  ul.plain li{margin-bottom:.45rem;}
+  strong{color:var(--bordeaux);}
+
+  .lead{
+    font-size:1.08rem;
+    border-left:3px solid var(--gold);
+    padding-left:1.1rem;
+    font-style:italic;
+    color:var(--ink);
+    opacity:.9;
+    margin-bottom:1.5rem;
+  }
+
+  .grid-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:1rem;
+    margin:1.2rem 0 1.5rem;
+  }
+  .fn-card{
+    background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.12);
+    border-top:3px solid var(--gold);
+    padding:1.1rem 1rem;
+    border-radius:3px;
+  }
+  .fn-card .fn-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    color:var(--bordeaux);
+    margin-bottom:.35rem;
+    font-size:1.02rem;
+  }
+  .fn-card p{font-size:.9rem;margin:0;opacity:.85;}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.4rem 0 0;}
+  .tab-btn{
+    font-family:'Space Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.03em;
+    background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.2);
+    color:var(--ink);
+    padding:.55rem .9rem;
+    border-radius:3px 3px 0 0;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .tab-btn:hover{background:var(--teal-light);}
+  .tab-btn.active{background:var(--bordeaux);color:var(--linen-light);border-color:var(--bordeaux);}
+  .tab-panel{
+    display:none;
+    background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.15);
+    padding:1.4rem 1.5rem;
+    border-radius:0 3px 3px 3px;
+  }
+  .tab-panel.active{display:block;}
+  .tab-panel ul{margin-left:1.2rem;}
+  .tab-panel li{margin-bottom:.5rem;}
+
+  .accordion-item{border-bottom:1px solid rgba(38,33,28,.15);}
+  .accordion-head{
+    width:100%;text-align:left;background:none;border:none;
+    padding:1rem 0;font-family:'Fraunces',serif;font-weight:600;
+    font-size:1.05rem;color:var(--ink);cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .accordion-head:hover{color:var(--bordeaux);}
+  .accordion-head .icon{font-family:'Space Mono',monospace;color:var(--gold);font-size:1.1rem;transition:transform .2s;}
+  .accordion-item.open .icon{transform:rotate(45deg);}
+  .accordion-body{max-height:0;overflow:hidden;transition:max-height .25s ease;font-size:.95rem;opacity:.9;}
+  .accordion-item.open .accordion-body{max-height:400px;padding-bottom:1rem;}
+
+  .checklist-box{
+    background:var(--teal-light);
+    border:1px solid rgba(63,93,88,.3);
+    border-radius:4px;
+    padding:1.5rem 1.5rem 1.2rem;
+    margin:1.5rem 0;
+  }
+  .checklist-box .cl-title{font-family:'Fraunces',serif;font-weight:600;color:var(--teal);margin-bottom:.9rem;font-size:1.1rem;}
+  .cl-item{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.7rem;cursor:pointer;font-size:.95rem;}
+  .cl-item input{margin-top:.25rem;accent-color:var(--teal);width:16px;height:16px;flex-shrink:0;}
+  .cl-item.checked span{text-decoration:line-through;opacity:.55;}
+  .cl-progress{margin-top:1rem;font-family:'Space Mono',monospace;font-size:.75rem;color:var(--teal);}
+
+  .quiz-box{
+    background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.15);
+    border-radius:4px;
+    padding:1.6rem 1.6rem;
+    margin:1.2rem 0;
+  }
+  .quiz-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.9rem;font-size:1.05rem;}
+  .quiz-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.6rem;}
+  .quiz-opt{
+    text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);
+    padding:.7rem .9rem;border-radius:3px;cursor:pointer;
+    font-family:'Work Sans',sans-serif;font-size:.92rem;transition:.15s;
+  }
+  .quiz-opt:hover{border-color:var(--bordeaux);}
+  .quiz-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .quiz-opt.incorrect{background:#F5E4E4;border-color:var(--bad);color:var(--bad);}
+  .quiz-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);
+    display:flex;justify-content:space-between;align-items:center;
+    padding:.9rem 1.5rem;margin-top:4rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);
+    text-decoration:none;padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  .page-nav .disabled{opacity:.3;pointer-events:none;}
+
+  footer.site-footer{
+    text-align:center;padding:2rem 1.5rem 1rem;
+    font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 01 · Tema 1 de 9</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 01 · Servicio de Alimentos y Bebidas</div>
+  <h1 class="title">El Uniforme</h1>
+  <p class="subtitle">La primera impresión del servicio empieza antes de tomar la orden</p>
+</header>
+
+<main>
+
+  <p class="lead">El uniforme no es solo ropa de trabajo: es una herramienta de higiene, identificación,
+  protección y comunicación con el cliente. Un mesero, un capitán y un bartender no se visten igual porque
+  su función dentro del servicio tampoco lo es.</p>
+
+  <h2 class="section-title"><span class="num">1.1</span> ¿Qué es el uniforme y para qué sirve?</h2>
+  <p>El uniforme es el conjunto de prendas, accesorios y elementos de presentación personal que identifican
+  a un colaborador con su puesto y con el establecimiento en el que trabaja. En el servicio de alimentos y
+  bebidas cumple cuatro funciones principales:</p>
+
+  <div class="grid-cards">
+    <div class="fn-card">
+      <div class="fn-title">Higiene</div>
+      <p>Evita el contacto directo entre la ropa de calle y los alimentos, bebidas y superficies de servicio.</p>
+    </div>
+    <div class="fn-card">
+      <div class="fn-title">Identificación</div>
+      <p>Permite al comensal reconocer de inmediato a quién dirigirse según su puesto (mesero, capitán, host).</p>
+    </div>
+    <div class="fn-card">
+      <div class="fn-title">Protección</div>
+      <p>Protege al colaborador de quemaduras, derrames y accidentes propios del servicio en piso y bar.</p>
+    </div>
+    <div class="fn-card">
+      <div class="fn-title">Imagen corporativa</div>
+      <p>Refuerza la identidad y el concepto del restaurante frente al cliente, como parte de la experiencia.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="num">1.2</span> Componentes del uniforme según el puesto</h2>
+  <p>Aunque varía según el concepto del restaurante, cada puesto de servicio tiene piezas características.
+  Explora cada rol:</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="mesero">Mesero / Mesera</button>
+    <button class="tab-btn" data-tab="capitan">Capitán / Maître</button>
+    <button class="tab-btn" data-tab="bartender">Bartender</button>
+    <button class="tab-btn" data-tab="host">Host / Hostess</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-mesero">
+    <ul>
+      <li><strong>Camisa o blusa</strong> de manga larga o corta, generalmente en color sobrio o del tono corporativo.</li>
+      <li><strong>Chaleco o mandil de servicio</strong>, según el concepto del restaurante.</li>
+      <li><strong>Corbata, moño o pañuelo</strong> como acento de formalidad.</li>
+      <li><strong>Mandil de cintura con bolsillo</strong> para el descorchador, la libreta y el mechero.</li>
+      <li><strong>Pantalón o falda</strong> de corte recto, en color negro u oscuro.</li>
+      <li><strong>Calzado cerrado, antiderrapante</strong> — nunca sandalias ni tenis deportivos.</li>
+      <li><strong>Gafete de identificación</strong> con nombre visible.</li>
+    </ul>
+  </div>
+
+  <div class="tab-panel" id="panel-capitan">
+    <ul>
+      <li><strong>Saco o chaqueta de servicio</strong>, generalmente más formal que la del mesero.</li>
+      <li><strong>Camisa de vestir</strong> impecable, de preferencia blanca.</li>
+      <li><strong>Corbata o moño</strong> como distintivo de jerarquía.</li>
+      <li><strong>Carpeta o menú</strong> como accesorio de trabajo, no del uniforme, pero de uso constante.</li>
+      <li><strong>Calzado formal, boleado</strong> — refleja el nivel de mando del puesto.</li>
+    </ul>
+  </div>
+
+  <div class="tab-panel" id="panel-bartender">
+    <ul>
+      <li><strong>Camisa de manga arremangable</strong> o remangada, cómoda para el trabajo de barra.</li>
+      <li><strong>Chaleco o tirantes</strong>, frecuente en bares de coctelería clásica.</li>
+      <li><strong>Mandil de barra</strong>, más largo y resistente a líquidos que el de piso.</li>
+      <li><strong>Reloj o cronómetro visible</strong>, útil para tiempos de preparación.</li>
+      <li><strong>Calzado antiderrapante de suela cerrada</strong>, por el piso húmedo de la barra.</li>
+    </ul>
+  </div>
+
+  <div class="tab-panel" id="panel-host">
+    <ul>
+      <li><strong>Uniforme más formal o de imagen</strong>, ya que es el primer contacto visual con el cliente.</li>
+      <li><strong>Colores acordes a la identidad del restaurante</strong>, a menudo distintos al del piso de servicio.</li>
+      <li><strong>Calzado cómodo pero formal</strong>, dado que permanece de pie en la recepción.</li>
+      <li><strong>Gafete y, en algunos casos, diadema o micrófono</strong> si maneja reservaciones por radio.</li>
+    </ul>
+  </div>
+
+  <h2 class="section-title"><span class="num">1.3</span> Normas de presentación personal</h2>
+  <p>El uniforme se complementa siempre con reglas de higiene y arreglo personal. Da clic en cada punto
+  para ver el detalle:</p>
+
+  <div id="accordion">
+    <div class="accordion-item">
+      <button class="accordion-head">Cabello <span class="icon">+</span></button>
+      <div class="accordion-body"><p>Limpio, recogido o corto. En cabello largo debe ir sujeto para
+      evitar contacto con alimentos y bebidas. Se recomienda evitar tintes de colores no naturales.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-head">Manos y uñas <span class="icon">+</span></button>
+      <div class="accordion-body"><p>Uñas cortas, limpias y sin esmalte (o esmalte neutro, según política
+      del establecimiento). Sin anillos grandes que puedan engancharse con vajilla o cristalería.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-head">Maquillaje y perfume <span class="icon">+</span></button>
+      <div class="accordion-body"><p>Discreto y natural. Se evitan fragancias fuertes, ya que pueden
+      interferir con la percepción de los aromas de alimentos y bebidas por parte del comensal.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-head">Joyería y accesorios <span class="icon">+</span></button>
+      <div class="accordion-body"><p>Mínima. Se recomienda un solo par de aretes pequeños y un reloj o
+      pulsera discreta. Nada que produzca ruido o riesgo de contaminación.</p></div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-head">Higiene corporal <span class="icon">+</span></button>
+      <div class="accordion-body"><p>Baño diario, aliento fresco y control del sudor son indispensables,
+      dado el contacto cercano y constante con el comensal durante el servicio.</p></div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="num">1.4</span> Cuidado y mantenimiento del uniforme</h2>
+  <ul class="plain">
+    <li>Debe estar siempre <strong>limpio y planchado</strong> antes de cada turno.</li>
+    <li>Revisar que no tenga <strong>manchas, botones flojos o costuras rotas</strong>.</li>
+    <li>No debe usarse fuera del horario laboral, ya que representa la imagen del restaurante.</li>
+    <li>El calzado debe mantenerse limpio y en buen estado, priorizando la seguridad antes que la estética.</li>
+    <li>Cada colaborador es responsable de tener un uniforme de repuesto en caso de accidente durante el turno.</li>
+  </ul>
+
+  <div class="checklist-box">
+    <div class="cl-title">✓ Lista de verificación antes de iniciar turno</div>
+    <label class="cl-item"><input type="checkbox"><span>Uniforme limpio, planchado y completo</span></label>
+    <label class="cl-item"><input type="checkbox"><span>Gafete de identificación colocado</span></label>
+    <label class="cl-item"><input type="checkbox"><span>Cabello recogido / arreglado</span></label>
+    <label class="cl-item"><input type="checkbox"><span>Uñas limpias y sin accesorios de riesgo</span></label>
+    <label class="cl-item"><input type="checkbox"><span>Calzado cerrado y antiderrapante</span></label>
+    <label class="cl-item"><input type="checkbox"><span>Mandil con herramientas de trabajo (mechero, descorchador, libreta)</span></label>
+    <div class="cl-progress" id="cl-progress">0 de 6 completados</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">1.5</span> Autoevaluación</h2>
+  <p>Pon a prueba lo que acabas de leer:</p>
+
+  <div class="quiz-box">
+    <div class="quiz-q">1. ¿Por qué se recomienda evitar el perfume fuerte en el uniforme de servicio?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Porque está prohibido por ley</button>
+      <button class="quiz-opt">Porque interfiere con la percepción de aromas de alimentos y bebidas</button>
+      <button class="quiz-opt">Porque mancha la tela del uniforme</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-q">2. ¿Cuál de las siguientes es una función del uniforme en el servicio?</div>
+    <div class="quiz-opts" data-answer="2">
+      <button class="quiz-opt">Aumentar el precio del menú</button>
+      <button class="quiz-opt">Reemplazar el manual de servicio</button>
+      <button class="quiz-opt">Proteger al colaborador de accidentes propios del servicio</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-q">3. El mandil de barra del bartender, en comparación con el de piso, suele ser:</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Más corto y decorativo</button>
+      <button class="quiz-opt">Más largo y resistente a líquidos</button>
+      <button class="quiz-opt">No se usa mandil en la barra</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a class="disabled" href="#">← Anterior</a>
+  <a href="index.html">Índice</a>
+  <a href="u1-montaje-de-mesas.html">Siguiente: Montaje de mesas →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 01 · Tema: Uniforme</footer>
+
+<script>
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.accordion-head').forEach(head=>{
+    head.addEventListener('click',()=>{
+      head.parentElement.classList.toggle('open');
+    });
+  });
+
+  const clItems = document.querySelectorAll('.cl-item input');
+  const clProgress = document.getElementById('cl-progress');
+  clItems.forEach(box=>{
+    box.addEventListener('change',()=>{
+      box.closest('.cl-item').classList.toggle('checked', box.checked);
+      const done = document.querySelectorAll('.cl-item input:checked').length;
+      clProgress.textContent = done + ' de ' + clItems.length + ' completados';
+    });
+  });
+
+  document.querySelectorAll('.quiz-opts').forEach(group=>{
+    const correctIndex = parseInt(group.dataset.answer,10);
+    const opts = group.querySelectorAll('.quiz-opt');
+    const feedback = group.nextElementSibling;
+    opts.forEach((opt,i)=>{
+      opt.addEventListener('click',()=>{
+        if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+        opts.forEach(o=>o.disabled=true);
+        if(i===correctIndex){
+          opt.classList.add('correct');
+          feedback.textContent='¡Correcto!';
+          feedback.style.color='#3F5D58';
+        }else{
+          opt.classList.add('incorrect');
+          opts[correctIndex].classList.add('correct');
+          feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+          feedback.style.color='#8C3B3B';
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

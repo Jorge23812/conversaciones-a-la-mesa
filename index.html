@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicio de Alimentos y Bebidas · Curso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E;
+    --bordeaux-dark:#3E1020;
+    --gold:#C9A15A;
+    --linen:#EDE6D6;
+    --linen-light:#F7F3E8;
+    --ink:#26211C;
+    --teal:#3F5D58;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--linen);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    line-height:1.6;
+  }
+  .rule{
+    border:none;
+    height:1px;
+    background:var(--ink);
+    opacity:.25;
+  }
+  .rule.thick{height:3px;opacity:.85;background:var(--bordeaux);}
+
+  /* HERO */
+  header.hero{
+    background:var(--bordeaux);
+    color:var(--linen-light);
+    padding:5rem 1.5rem 4rem;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::before{
+    content:"";
+    position:absolute;
+    inset:14px;
+    border:1px solid rgba(201,161,90,0.45);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:.72rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:1.4rem;
+  }
+  h1.title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(2.4rem,6vw,4.6rem);
+    letter-spacing:-0.01em;
+    max-width:16ch;
+    margin:0 auto 1.2rem;
+  }
+  .subtitle{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(1rem,2vw,1.25rem);
+    color:var(--gold);
+    max-width:38ch;
+    margin:0 auto;
+  }
+  .goblet{
+    width:56px;height:56px;margin:2.2rem auto 0;opacity:.9;
+  }
+
+  /* INTRO */
+  section.intro{
+    max-width:760px;
+    margin:0 auto;
+    padding:4rem 1.5rem 2rem;
+    text-align:center;
+  }
+  section.intro p{
+    font-size:1.05rem;
+    color:var(--ink);
+    opacity:.85;
+  }
+  section.intro p + p{margin-top:1rem;}
+
+  /* MENU / SITEMAP */
+  main{
+    max-width:820px;
+    margin:0 auto;
+    padding:1rem 1.5rem 6rem;
+  }
+  .unit{
+    margin-top:4.5rem;
+  }
+  .unit-head{
+    display:flex;
+    align-items:baseline;
+    gap:1rem;
+    margin-bottom:.3rem;
+  }
+  .unit-number{
+    font-family:'Space Mono',monospace;
+    font-size:.85rem;
+    letter-spacing:.15em;
+    color:var(--gold);
+    background:var(--bordeaux);
+    padding:.3rem .6rem;
+    border-radius:2px;
+  }
+  .unit-name{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:1.9rem;
+  }
+  .unit-course-tag{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    color:var(--teal);
+    font-size:1.05rem;
+    margin:.2rem 0 1.6rem;
+  }
+  ul.menu-list{
+    list-style:none;
+  }
+  ul.menu-list li{
+    display:flex;
+    align-items:baseline;
+    gap:.5rem;
+    padding:.85rem 0;
+    border-bottom:1px dotted rgba(38,33,28,.25);
+  }
+  ul.menu-list li a{
+    color:var(--ink);
+    text-decoration:none;
+    font-weight:500;
+    font-size:1.02rem;
+    flex-shrink:0;
+  }
+  ul.menu-list li a:hover{color:var(--bordeaux);}
+  .leader{
+    flex:1;
+    border-bottom:1px dotted rgba(38,33,28,.35);
+    transform:translateY(-4px);
+  }
+  .status{
+    font-family:'Space Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.05em;
+    color:var(--teal);
+    text-transform:uppercase;
+    flex-shrink:0;
+  }
+  .status.pending{color:rgba(38,33,28,.4);}
+  ul.sub-list{
+    list-style:none;
+    margin-left:1.4rem;
+  }
+  ul.sub-list li{
+    padding:.55rem 0;
+    border-bottom:1px dotted rgba(38,33,28,.15);
+    font-size:.92rem;
+  }
+  ul.sub-list li a{color:var(--ink);text-decoration:none;font-weight:500;}
+  ul.sub-list li a:hover{color:var(--bordeaux);}
+
+  footer{
+    background:var(--bordeaux-dark);
+    color:rgba(237,230,214,.65);
+    text-align:center;
+    padding:2.4rem 1.5rem;
+    font-family:'Space Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.05em;
+  }
+
+  @media(max-width:600px){
+    .unit-head{flex-direction:column;gap:.4rem;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Material académico · Uso libre</div>
+  <h1 class="title">Servicio de Alimentos y Bebidas</h1>
+  <p class="subtitle">Manual de curso para la formación en hospitalidad</p>
+  <svg class="goblet" viewBox="0 0 24 24" fill="none" stroke="#C9A15A" stroke-width="1">
+    <path d="M6 3h12l-1 6a5 5 0 0 1-10 0L6 3z"/>
+    <line x1="12" y1="14" x2="12" y2="19"/>
+    <line x1="8" y1="21" x2="16" y2="21"/>
+  </svg>
+</header>
+
+<section class="intro">
+  <p>Del montaje de una mesa a la copa de un coctel clásico: este manual recorre todo lo que se necesita
+  para dominar el servicio de alimentos y bebidas, con la misma exigencia con la que se trabaja en un
+  restaurante real.</p>
+  <p>Explora el temario completo a continuación, unidad por unidad.</p>
+</section>
+
+<main>
+
+  <div class="unit">
+    <div class="unit-head">
+      <span class="unit-number">UNIDAD 01</span>
+      <span class="unit-name">Servicio de Alimentos y Bebidas</span>
+    </div>
+    <p class="unit-course-tag">— la base: uniforme, montaje y equipo de servicio</p>
+    <ul class="menu-list">
+      <li><a href="u1-uniforme.html">Uniforme</a><span class="leader"></span></li>
+      <li><a href="u1-montaje-de-mesas.html">Montaje de mesas</a><span class="leader"></span></li>
+      <li><a href="u1-servicio-de-mesas.html">Servicio de mesas</a><span class="leader"></span></li>
+      <li><a href="u1-identificacion-de-equipo.html">Identificación de equipo y utensilios en el servicio</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u1-identificacion-de-equipo.html">Plaqué o cubierto</a></li>
+      <li><a href="u1-identificacion-de-equipo.html">Mantelería</a></li>
+      <li><a href="u1-identificacion-de-equipo.html">Cristalería</a></li>
+      <li><a href="u1-identificacion-de-equipo.html">Accesorios de bar</a></li>
+      <li><a href="u1-identificacion-de-equipo.html">Limpieza de equipo</a></li>
+    </ul>
+    <ul class="menu-list">
+      <li><a href="u1-normatividad-servicio.html">Normatividad para el área de servicio</a><span class="leader"></span></li>
+    </ul>
+  </div>
+
+  <div class="unit">
+    <div class="unit-head">
+      <span class="unit-number">UNIDAD 02</span>
+      <span class="unit-name">Técnicas y Tipos de Servicio</span>
+    </div>
+    <p class="unit-course-tag">— cómo se sirve en cada estilo de restaurante</p>
+    <ul class="menu-list">
+      <li><a href="u2-tipos-de-servicio.html">Tipos de servicio en un restaurante</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u2-tipos-de-servicio.html">Servicio francés</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Servicio inglés</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Servicio americano o emplatado</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Servicio de gueridón</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Servicio ruso</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Room service</a></li>
+      <li><a href="u2-tipos-de-servicio.html">Montaje y protocolo de servicio</a></li>
+    </ul>
+    <ul class="menu-list">
+      <li><a href="u2-tecnicas-de-servicio.html">Técnicas de servicio</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u2-tecnicas-de-servicio.html">Descorche</a></li>
+      <li><a href="u2-tecnicas-de-servicio.html">Servicio de bebidas</a></li>
+      <li><a href="u2-tecnicas-de-servicio.html">Servicio de vinos</a></li>
+    </ul>
+  </div>
+
+  <div class="unit">
+    <div class="unit-head">
+      <span class="unit-number">UNIDAD 03</span>
+      <span class="unit-name">El Bar</span>
+    </div>
+    <p class="unit-course-tag">— historia, tipos de bar y clasificación de bebidas</p>
+    <ul class="menu-list">
+      <li><a href="u3-historia-del-bar.html">Historia del bar</a><span class="leader"></span></li>
+      <li><a href="u3-tipos-de-bar.html">Tipos de bar</a><span class="leader"></span></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Clasificación de bebidas alcohólicas</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Destilados</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Fermentadas</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Licores</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Espirituosos</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Fortificados</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-alcoholicas.html">Aguardientes</a></li>
+    </ul>
+    <ul class="menu-list">
+      <li><a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Clasificación de bebidas no alcohólicas</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Agua</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Mezcladores</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Jugos y néctares</a></li>
+      <li><a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Gaseosas (sodas)</a></li>
+    </ul>
+  </div>
+
+  <div class="unit">
+    <div class="unit-head">
+      <span class="unit-number">UNIDAD 04</span>
+      <span class="unit-name">Coctelería</span>
+    </div>
+    <p class="unit-course-tag">— composición, métodos de preparación y tipos de coctel</p>
+    <ul class="menu-list">
+      <li><a href="u4-composicion-de-un-coctel.html">Composición de un coctel</a><span class="leader"></span></li>
+      <li><a href="u4-metodos-de-preparacion.html">Métodos de preparación</a><span class="leader"></span></li>
+    </ul>
+    <ul class="sub-list">
+      <li><a href="u4-metodos-de-preparacion.html">Mise en place de bar</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método directo</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método refrescando</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método batido</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método licuado</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método frozen</a></li>
+      <li><a href="u4-metodos-de-preparacion.html">Método flameado</a></li>
+    </ul>
+    <ul class="menu-list">
+      <li><a href="u4-cocteles-alcoholicos.html">Cocteles alcohólicos</a><span class="leader"></span></li>
+      <li><a href="u4-cocteles-no-alcoholicos.html">Cocteles no alcohólicos</a><span class="leader"></span></li>
+    </ul>
+  </div>
+
+</main>
+
+<footer>
+  Servicio de Alimentos y Bebidas — Material académico de distribución libre
+</footer>
+
+</body>
+</html>

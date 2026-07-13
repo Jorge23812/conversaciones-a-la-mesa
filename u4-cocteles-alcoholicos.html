@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cocteles alcohólicos · Unidad 4 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:880px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== FAMILY DEFINITIONS ===== */
+  .fam-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem;margin:1.3rem 0 1.6rem;}
+  .fam-item{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-left:3px solid var(--teal);border-radius:4px;padding:1rem 1.1rem;}
+  .fam-item .fn{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:.98rem;margin-bottom:.3rem;}
+  .fam-item p{font-size:.83rem;margin:0;opacity:.85;}
+
+  /* ===== FILTER + CARDS ===== */
+  .filter-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.3rem 0 1.5rem;}
+  .filter-btn{
+    font-family:'Space Mono',monospace;font-size:.75rem;background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.25);padding:.5rem .9rem;border-radius:20px;cursor:pointer;transition:.15s;
+  }
+  .filter-btn:hover{border-color:var(--gold);}
+  .filter-btn.active{background:var(--bordeaux);color:var(--linen-light);border-color:var(--bordeaux);}
+  .cocktail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1rem;margin-bottom:1.5rem;}
+  .ck-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.2rem 1.3rem;}
+  .ck-card.hidden{display:none;}
+  .ck-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:1.05rem;margin-bottom:.2rem;}
+  .ck-fam{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--teal);text-transform:uppercase;margin-bottom:.6rem;display:block;}
+  .ck-list{list-style:none;font-size:.85rem;margin-bottom:.5rem;}
+  .ck-list li{margin-bottom:.25rem;}
+  .ck-meta{font-size:.78rem;opacity:.7;font-style:italic;}
+
+  /* ===== SCALER ===== */
+  .scaler-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.7rem;margin:1.4rem 0 1.8rem;}
+  .scaler-controls{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.3rem;align-items:center;}
+  .scaler-controls select{
+    flex:1;min-width:180px;font-family:'Work Sans',sans-serif;font-size:.9rem;padding:.6rem .7rem;
+    border-radius:4px;border:1px solid rgba(38,33,28,.3);background:#fff;
+  }
+  .scaler-num{display:flex;align-items:center;gap:.5rem;}
+  .scaler-num button{
+    width:32px;height:32px;border-radius:50%;border:1px solid var(--bordeaux);background:#fff;color:var(--bordeaux);
+    font-size:1rem;cursor:pointer;font-family:'Space Mono',monospace;
+  }
+  .scaler-num span{font-family:'Space Mono',monospace;font-weight:700;font-size:1rem;width:60px;text-align:center;}
+  .scaler-card{background:#fff;border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.3rem 1.4rem;}
+  .scaler-card h4{font-family:'Fraunces',serif;color:var(--bordeaux);font-size:1.15rem;margin-bottom:.7rem;}
+  .scaler-row{display:flex;justify-content:space-between;font-size:.9rem;padding:.4rem 0;border-bottom:1px dotted rgba(38,33,28,.15);}
+  .scaler-row:last-child{border-bottom:none;}
+  .scaler-row .sv{font-family:'Space Mono',monospace;color:var(--teal);font-weight:700;}
+  .scaler-meta{margin-top:.8rem;font-size:.82rem;opacity:.75;}
+
+  /* ===== QUIZ ===== */
+  .quiz-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .quiz-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.9rem;font-size:1.02rem;}
+  .quiz-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.6rem;}
+  .quiz-opt{text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);padding:.7rem .9rem;border-radius:3px;cursor:pointer;font-size:.92rem;transition:.15s;}
+  .quiz-opt:hover{border-color:var(--bordeaux);}
+  .quiz-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .quiz-opt.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .quiz-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 04 · Coctelería · Tema 3</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 04 · Coctelería</div>
+  <h1 class="title">Cocteles Alcohólicos</h1>
+  <p class="subtitle">De familia en familia: los clásicos que todo bartender debe conocer</p>
+</header>
+
+<main>
+
+  <p class="lead">Casi todos los cocteles clásicos pertenecen a una de un puñado de "familias" que
+  comparten estructura y método de preparación. Reconocer la familia de una receta ayuda a memorizar
+  decenas de cocteles sin aprenderlos uno por uno.</p>
+
+  <h2 class="section-title"><span class="num">14.1</span> Las grandes familias</h2>
+  <div class="fam-strip">
+    <div class="fam-item"><div class="fn">Sours</div><p>Base + ácido + dulce, normalmente batidos. Ej: Margarita, Daiquiri.</p></div>
+    <div class="fam-item"><div class="fn">Old Fashioned</div><p>Base + azúcar + bitters, refrescados o servidos directo. Ej: Old Fashioned, Negroni.</p></div>
+    <div class="fam-item"><div class="fn">Highballs</div><p>Base + mezclador largo, servidos con hielo en vaso alto. Ej: Mojito, Cuba libre.</p></div>
+    <div class="fam-item"><div class="fn">Martinis</div><p>Base + modificador, refrescados, sin azúcar. Ej: Martini, Manhattan.</p></div>
+    <div class="fam-item"><div class="fn">Tiki</div><p>Ron + jugos tropicales + jarabes especiados. Ej: Piña colada, Mai Tai.</p></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">14.2</span> Recetario clásico</h2>
+  <p class="hint">Filtra por familia para explorar cada receta:</p>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" data-fam="todos">Todos</button>
+    <button class="filter-btn" data-fam="Sours">Sours</button>
+    <button class="filter-btn" data-fam="Old Fashioned">Old Fashioned</button>
+    <button class="filter-btn" data-fam="Highballs">Highballs</button>
+    <button class="filter-btn" data-fam="Martinis">Martinis</button>
+    <button class="filter-btn" data-fam="Tiki">Tiki</button>
+  </div>
+
+  <div class="cocktail-grid" id="cocktail-grid"></div>
+
+  <h2 class="section-title"><span class="num">14.3</span> Calculadora de receta</h2>
+  <p>Elige un coctel y ajusta el número de copas — las cantidades se recalculan automáticamente:</p>
+
+  <div class="scaler-tool">
+    <div class="scaler-controls">
+      <select id="scaler-select"></select>
+      <div class="scaler-num">
+        <button id="sc-minus">−</button>
+        <span id="sc-count">1 copa</span>
+        <button id="sc-plus">+</button>
+      </div>
+    </div>
+    <div class="scaler-card" id="scaler-card"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">14.4</span> Autoevaluación</h2>
+
+  <div class="quiz-box">
+    <div class="quiz-q">1. ¿A qué familia pertenece el Old Fashioned?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Highball</button>
+      <button class="quiz-opt">Old Fashioned (base + azúcar + bitters)</button>
+      <button class="quiz-opt">Tiki</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">2. ¿Qué caracteriza a un highball?</div>
+    <div class="quiz-opts" data-answer="2">
+      <button class="quiz-opt">Se sirve sin hielo, en copa pequeña</button>
+      <button class="quiz-opt">Solo lleva licores, sin mezclador</button>
+      <button class="quiz-opt">Base + mezclador largo, servido con hielo en vaso alto</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">3. ¿Qué tienen en común los cocteles tipo "sour"?</div>
+    <div class="quiz-opts" data-answer="0">
+      <button class="quiz-opt">Base + ácido + dulce, normalmente batidos</button>
+      <button class="quiz-opt">Siempre se preparan flameados</button>
+      <button class="quiz-opt">Nunca llevan cítricos</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u4-metodos-de-preparacion.html">← Anterior: Métodos de preparación</a>
+  <a href="index.html">Índice</a>
+  <a href="u4-cocteles-no-alcoholicos.html">Siguiente: Cocteles no alcohólicos →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 04 · Tema: Cocteles alcohólicos</footer>
+
+<script>
+const cocktails = [
+  {n:"Margarita", fam:"Sours", glass:"Copa margarita", garnish:"Escarchado de sal", method:"Batido",
+   ing:[["Tequila",50],["Triple sec",20],["Jugo de limón",20]]},
+  {n:"Daiquiri", fam:"Sours", glass:"Copa coupe", garnish:"Twist de limón", method:"Batido",
+   ing:[["Ron blanco",45],["Jugo de limón",25],["Jarabe simple",15]]},
+  {n:"Whiskey Sour", fam:"Sours", glass:"Rocks", garnish:"Cereza y naranja", method:"Batido",
+   ing:[["Whisky",45],["Jugo de limón",25],["Jarabe simple",15]]},
+  {n:"Old Fashioned", fam:"Old Fashioned", glass:"Rocks", garnish:"Twist de naranja", method:"Refrescando / directo",
+   ing:[["Whisky bourbon",60],["Jarabe simple",7],["Angostura bitters (dashes)",2]]},
+  {n:"Negroni", fam:"Old Fashioned", glass:"Rocks", garnish:"Twist de naranja", method:"Refrescando",
+   ing:[["Ginebra",30],["Vermut rojo",30],["Campari",30]]},
+  {n:"Mojito", fam:"Highballs", glass:"Collins", garnish:"Ramita de menta", method:"Directo (macerado)",
+   ing:[["Ron blanco",45],["Jugo de limón",25],["Jarabe simple",20],["Soda",60]]},
+  {n:"Martini", fam:"Martinis", glass:"Copa martini", garnish:"Aceituna o twist de limón", method:"Refrescando",
+   ing:[["Ginebra",60],["Vermut seco",10]]},
+  {n:"Piña Colada", fam:"Tiki", glass:"Hurricane", garnish:"Rodaja de piña y cereza", method:"Licuado",
+   ing:[["Ron blanco",45],["Crema de coco",30],["Jugo de piña",90]]}
+];
+
+const gridEl = document.getElementById('cocktail-grid');
+cocktails.forEach(c=>{
+  const card = document.createElement('div');
+  card.className = 'ck-card';
+  card.dataset.fam = c.fam;
+  card.innerHTML = `<div class="ck-name">${c.n}</div>
+    <span class="ck-fam">${c.fam}</span>
+    <ul class="ck-list">${c.ing.map(i=>`<li>${i[0]} — ${i[1]} ml</li>`).join('')}</ul>
+    <div class="ck-meta">${c.glass} · ${c.garnish} · ${c.method}</div>`;
+  gridEl.appendChild(card);
+});
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const fam = btn.dataset.fam;
+    document.querySelectorAll('.ck-card').forEach(card=>{
+      card.classList.toggle('hidden', fam!=='todos' && card.dataset.fam!==fam);
+    });
+  });
+});
+
+// Scaler
+const scalerSelect = document.getElementById('scaler-select');
+cocktails.forEach((c,i)=>{ scalerSelect.innerHTML += `<option value="${i}">${c.n}</option>`; });
+let servings = 1;
+function renderScaler(){
+  const c = cocktails[scalerSelect.value];
+  document.getElementById('sc-count').textContent = servings + (servings===1?' copa':' copas');
+  const card = document.getElementById('scaler-card');
+  card.innerHTML = `<h4>${c.n}</h4>` +
+    c.ing.map(i=>`<div class="scaler-row"><span>${i[0]}</span><span class="sv">${Math.round(i[1]*servings)} ${i[0].includes('dashes')?'':'ml'}</span></div>`).join('') +
+    `<div class="scaler-meta">${c.glass} · ${c.garnish} · Método: ${c.method}</div>`;
+}
+document.getElementById('sc-minus').addEventListener('click', ()=>{ if(servings>1){servings--; renderScaler();} });
+document.getElementById('sc-plus').addEventListener('click', ()=>{ if(servings<12){servings++; renderScaler();} });
+scalerSelect.addEventListener('change', renderScaler);
+renderScaler();
+
+// Quiz
+document.querySelectorAll('.quiz-opts').forEach(group=>{
+  const correctIndex = parseInt(group.dataset.answer,10);
+  const opts = group.querySelectorAll('.quiz-opt');
+  const feedback = group.nextElementSibling;
+  opts.forEach((opt,i)=>{
+    opt.addEventListener('click', ()=>{
+      if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+      opts.forEach(o=>o.disabled=true);
+      if(i===correctIndex){
+        opt.classList.add('correct');
+        feedback.textContent='¡Correcto!';
+        feedback.style.color='#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+        feedback.style.color='#8C3B3B';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

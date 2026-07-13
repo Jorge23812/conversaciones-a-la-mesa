@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Composición de un coctel · Unidad 4 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:860px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== GLASS BUILDER ===== */
+  .builder{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem 1.6rem;margin:1.4rem 0 1.8rem;display:flex;gap:2rem;flex-wrap:wrap;align-items:center;}
+  .glass-wrap{flex-shrink:0;width:140px;text-align:center;}
+  .glass-shape{
+    width:110px;height:150px;margin:0 auto;
+    clip-path:polygon(8% 0%, 92% 0%, 62% 65%, 62% 100%, 38% 100%, 38% 65%);
+    background:#fff;border:2px solid rgba(38,33,28,.2);
+    display:flex;flex-direction:column-reverse;overflow:hidden;position:relative;
+  }
+  .glass-layer{width:100%;height:0;background:#ddd;transition:height .4s, background .3s;}
+  .glass-layer.active{height:16.6%;}
+  .garnish-icon{position:absolute;top:-14px;left:50%;transform:translateX(-50%) scale(0);transition:transform .3s;font-size:1.3rem;}
+  .garnish-icon.active{transform:translateX(-50%) scale(1);}
+  .builder-legend{flex:1;min-width:240px;}
+  .legend-btn{
+    display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;background:none;border:none;
+    padding:.55rem .4rem;cursor:pointer;border-radius:4px;font-size:.88rem;transition:.15s;
+  }
+  .legend-btn:hover{background:var(--teal-light);}
+  .legend-btn.active{background:var(--teal-light);font-weight:600;}
+  .legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0;border:1px solid rgba(38,33,28,.25);}
+  .builder-desc{
+    margin-top:1rem;background:#fff;border:1px solid rgba(38,33,28,.15);border-radius:5px;
+    padding:.9rem 1.1rem;font-size:.87rem;min-height:3rem;
+  }
+
+  /* ===== RATIO MIXER ===== */
+  .ratio-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.7rem;margin:1.4rem 0 1.8rem;}
+  .ratio-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+  .ratio-label{width:90px;flex-shrink:0;font-size:.88rem;font-weight:600;}
+  .ratio-row input[type=range]{flex:1;}
+  .ratio-val{width:26px;text-align:center;font-family:'Space Mono',monospace;font-size:.85rem;color:var(--bordeaux);font-weight:700;}
+  .ratio-bar{display:flex;height:22px;border-radius:4px;overflow:hidden;margin:1rem 0;}
+  .ratio-seg{transition:width .3s;}
+  .ratio-feedback{font-size:.88rem;font-style:italic;text-align:center;color:var(--teal);}
+
+  /* ===== COCKTAIL BREAKDOWN CARDS ===== */
+  .cx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1.4rem 0 1.8rem;}
+  .cx-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.2rem 1.3rem;}
+  .cx-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:1.05rem;margin-bottom:.6rem;}
+  .cx-row{display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0;border-bottom:1px dotted rgba(38,33,28,.15);}
+  .cx-row:last-child{border-bottom:none;}
+  .cx-role{font-family:'Space Mono',monospace;color:var(--teal);font-size:.68rem;text-transform:uppercase;}
+
+  /* ===== QUIZ ===== */
+  .quiz-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .quiz-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.9rem;font-size:1.02rem;}
+  .quiz-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.6rem;}
+  .quiz-opt{text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);padding:.7rem .9rem;border-radius:3px;cursor:pointer;font-size:.92rem;transition:.15s;}
+  .quiz-opt:hover{border-color:var(--bordeaux);}
+  .quiz-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .quiz-opt.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .quiz-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+
+  @media(max-width:560px){.builder{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 04 · Coctelería · Tema 1</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 04 · Coctelería</div>
+  <h1 class="title">Composición de un Coctel</h1>
+  <p class="subtitle">Seis capas que convierten una mezcla en una receta con identidad</p>
+</header>
+
+<main>
+
+  <p class="lead">Un coctel no es una mezcla al azar: es una construcción con roles definidos, donde cada
+  ingrediente cumple una función específica. Entender esa anatomía es lo que permite a un bartender crear
+  —o corregir— una receta con criterio, no solo por intuición.</p>
+
+  <h2 class="section-title"><span class="num">12.1</span> Anatomía de un coctel</h2>
+  <p class="hint">Toca cada capa para construir el coctel y ver su función.</p>
+
+  <div class="builder">
+    <div class="glass-wrap">
+      <div class="glass-shape">
+        <span class="garnish-icon" id="garnish-icon">🍋</span>
+        <div class="glass-layer" data-layer="decoracion" style="background:#E8A33D;"></div>
+        <div class="glass-layer" data-layer="diluyente" style="background:#BFD8D2;"></div>
+        <div class="glass-layer" data-layer="acidulante" style="background:#D9C24C;"></div>
+        <div class="glass-layer" data-layer="endulzante" style="background:#E7B4C0;"></div>
+        <div class="glass-layer" data-layer="modificador" style="background:#A6673B;"></div>
+        <div class="glass-layer" data-layer="base" style="background:#5C1A2E;"></div>
+      </div>
+    </div>
+    <div class="builder-legend" id="builder-legend"></div>
+  </div>
+  <div class="builder-desc" id="builder-desc">Selecciona un componente para empezar a construir el coctel.</div>
+
+  <h2 class="section-title"><span class="num">12.2</span> La proporción importa</h2>
+  <p>La estructura clásica de un "sour" (coctel ácido) sigue una proporción aproximada de
+  <strong>2 partes de base, 1 de ácido y 1 de dulce</strong>. Mueve los controles y observa qué tan
+  equilibrada queda tu mezcla:</p>
+
+  <div class="ratio-tool">
+    <div class="ratio-row"><div class="ratio-label">Base</div><input type="range" id="r-base" min="0" max="4" value="2"><div class="ratio-val" id="v-base">2</div></div>
+    <div class="ratio-row"><div class="ratio-label">Ácido</div><input type="range" id="r-acido" min="0" max="4" value="1"><div class="ratio-val" id="v-acido">1</div></div>
+    <div class="ratio-row"><div class="ratio-label">Dulce</div><input type="range" id="r-dulce" min="0" max="4" value="1"><div class="ratio-val" id="v-dulce">1</div></div>
+    <div class="ratio-bar" id="ratio-bar"></div>
+    <div class="ratio-feedback" id="ratio-feedback"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">12.3</span> La anatomía en cocteles reales</h2>
+  <div class="cx-grid" id="cx-grid"></div>
+
+  <h2 class="section-title"><span class="num">12.4</span> Autoevaluación</h2>
+
+  <div class="quiz-box">
+    <div class="quiz-q">1. ¿Qué componente aporta la mayor proporción e "identidad" a un coctel?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">El garnish o decoración</button>
+      <button class="quiz-opt">La base (el licor principal)</button>
+      <button class="quiz-opt">El diluyente</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">2. ¿Qué función cumple el acidulante en un coctel?</div>
+    <div class="quiz-opts" data-answer="0">
+      <button class="quiz-opt">Aportar acidez y balancear el dulzor</button>
+      <button class="quiz-opt">Aportar el color final de la bebida</button>
+      <button class="quiz-opt">Reemplazar al hielo</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">3. En un Old Fashioned, ¿qué papel juega el azúcar?</div>
+    <div class="quiz-opts" data-answer="2">
+      <button class="quiz-opt">Es la base del coctel</button>
+      <button class="quiz-opt">Sustituye al bitter</button>
+      <button class="quiz-opt">Es el endulzante que equilibra el amargor de los bitters</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">← Anterior: Unidad 03</a>
+  <a href="index.html">Índice</a>
+  <a href="u4-metodos-de-preparacion.html">Siguiente: Métodos de preparación →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 04 · Tema: Composición de un coctel</footer>
+
+<script>
+// Glass builder
+const components = [
+  {id:"base", name:"Base", color:"#5C1A2E", desc:"El licor principal del coctel: ron, whisky, ginebra, tequila o vodka. Define el carácter y suele ser la mayor proporción de la receta."},
+  {id:"modificador", name:"Modificador", color:"#A6673B", desc:"Un segundo licor o vino que añade complejidad y profundidad: vermut, licor de naranja, aperitivos amargos."},
+  {id:"endulzante", name:"Endulzante", color:"#E7B4C0", desc:"Jarabe simple, granadina o un licor dulce que equilibra la acidez o el amargor de otros componentes."},
+  {id:"acidulante", name:"Acidulante", color:"#D9C24C", desc:"Jugo de limón o lima que aporta frescura y balance frente al dulce — clave en los cocteles tipo 'sour'."},
+  {id:"diluyente", name:"Diluyente", color:"#BFD8D2", desc:"Agua, hielo derretido o soda que suaviza la intensidad del alcohol y ajusta la textura final."},
+  {id:"decoracion", name:"Decoración (garnish)", color:"#E8A33D", desc:"El toque final: una twist de cítrico, una cereza o una ramita de hierba que suma aroma y presentación."}
+];
+const legendEl = document.getElementById('builder-legend');
+const descEl = document.getElementById('builder-desc');
+components.forEach(c=>{
+  const btn = document.createElement('button');
+  btn.className = 'legend-btn';
+  btn.innerHTML = `<span class="legend-swatch" style="background:${c.color}"></span> ${c.name}`;
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.legend-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const layer = document.querySelector('.glass-layer[data-layer="'+c.id+'"]');
+    layer.classList.add('active');
+    if(c.id==='decoracion'){ document.getElementById('garnish-icon').classList.add('active'); }
+    descEl.innerHTML = `<strong>${c.name}:</strong> ${c.desc}`;
+  });
+  legendEl.appendChild(btn);
+});
+
+// Ratio mixer
+const rBase = document.getElementById('r-base');
+const rAcido = document.getElementById('r-acido');
+const rDulce = document.getElementById('r-dulce');
+function renderRatio(){
+  const b = parseInt(rBase.value,10), a = parseInt(rAcido.value,10), d = parseInt(rDulce.value,10);
+  document.getElementById('v-base').textContent = b;
+  document.getElementById('v-acido').textContent = a;
+  document.getElementById('v-dulce').textContent = d;
+  const total = b+a+d || 1;
+  document.getElementById('ratio-bar').innerHTML = `
+    <div class="ratio-seg" style="width:${b/total*100}%;background:#5C1A2E;"></div>
+    <div class="ratio-seg" style="width:${a/total*100}%;background:#D9C24C;"></div>
+    <div class="ratio-seg" style="width:${d/total*100}%;background:#E7B4C0;"></div>
+  `;
+  const fb = document.getElementById('ratio-feedback');
+  if(b===0){ fb.textContent = "Sin base no hay coctel — solo tienes un jugo con jarabe."; return; }
+  const acidoRatio = a/b, dulceRatio = d/b;
+  if(acidoRatio>=0.4 && acidoRatio<=0.6 && dulceRatio>=0.4 && dulceRatio<=0.6){
+    fb.textContent = "¡Equilibrado! Muy cerca de la proporción clásica de un Whiskey Sour (2:1:1).";
+  } else if(acidoRatio > 0.6){
+    fb.textContent = "Demasiado ácido — necesitarías más dulce o base para balancear.";
+  } else if(dulceRatio > 0.6){
+    fb.textContent = "Demasiado dulce — le falta acidez para refrescar el paladar.";
+  } else {
+    fb.textContent = "Mezcla suave, con poca acidez y poco dulce frente a la base — más cerca de un coctel tipo 'spirit-forward'.";
+  }
+}
+[rBase,rAcido,rDulce].forEach(r=>r.addEventListener('input', renderRatio));
+renderRatio();
+
+// Cocktail breakdown cards
+const cocktails = [
+  {n:"Daiquiri", rows:[["Base","Ron blanco"],["Ácido","Jugo de lima"],["Dulce","Jarabe simple"],["Diluyente","Hielo agitado"]]},
+  {n:"Old Fashioned", rows:[["Base","Whisky bourbon"],["Dulce","Azúcar / jarabe"],["Bitter","Angostura"],["Garnish","Twist de naranja"]]},
+  {n:"Margarita", rows:[["Base","Tequila"],["Modificador","Triple sec"],["Ácido","Jugo de limón"],["Garnish","Escarchado de sal"]]},
+  {n:"Whiskey Sour", rows:[["Base","Whisky"],["Ácido","Jugo de limón"],["Dulce","Jarabe simple"],["Garnish","Cereza y naranja"]]}
+];
+const cxGrid = document.getElementById('cx-grid');
+cocktails.forEach(c=>{
+  const card = document.createElement('div');
+  card.className = 'cx-card';
+  card.innerHTML = `<div class="cx-name">${c.n}</div>` + c.rows.map(r=>
+    `<div class="cx-row"><span class="cx-role">${r[0]}</span><span>${r[1]}</span></div>`
+  ).join('');
+  cxGrid.appendChild(card);
+});
+
+// Quiz
+document.querySelectorAll('.quiz-opts').forEach(group=>{
+  const correctIndex = parseInt(group.dataset.answer,10);
+  const opts = group.querySelectorAll('.quiz-opt');
+  const feedback = group.nextElementSibling;
+  opts.forEach((opt,i)=>{
+    opt.addEventListener('click', ()=>{
+      if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+      opts.forEach(o=>o.disabled=true);
+      if(i===correctIndex){
+        opt.classList.add('correct');
+        feedback.textContent='¡Correcto!';
+        feedback.style.color='#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+        feedback.style.color='#8C3B3B';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

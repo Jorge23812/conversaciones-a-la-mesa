@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identificación de equipo y utensilios · Unidad 1 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:820px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.6rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  ul.plain{margin:0 0 1rem 1.2rem;}
+  ul.plain li{margin-bottom:.45rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== GALLERY / MODAL ===== */
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.8rem;margin:1.3rem 0 1.8rem;}
+  .g-card{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;
+    padding:1rem .6rem .8rem;text-align:center;cursor:pointer;transition:.15s;
+  }
+  .g-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .g-card svg{margin:0 auto .6rem;}
+  .g-card .g-name{font-size:.76rem;font-weight:600;line-height:1.25;}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(38,33,28,.75);z-index:50;
+    align-items:center;justify-content:center;padding:1.5rem;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--linen-light);border-radius:8px;max-width:380px;width:100%;
+    padding:2rem 1.8rem;text-align:center;position:relative;
+  }
+  .modal-close{
+    position:absolute;top:.8rem;right:.9rem;background:none;border:none;font-size:1.3rem;
+    cursor:pointer;color:var(--ink);opacity:.6;
+  }
+  .modal-close:hover{opacity:1;}
+  .modal-icon{margin:0 auto 1rem;}
+  .modal-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;color:var(--bordeaux);margin-bottom:.6rem;}
+  .modal-desc{font-size:.92rem;opacity:.85;}
+
+  /* ===== HORIZONTAL SWIPE GALLERY ===== */
+  .swipe-hint{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--teal);margin-bottom:.6rem;}
+  .swipe-track{
+    display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;
+    margin-bottom:1.5rem;-webkit-overflow-scrolling:touch;
+  }
+  .swipe-track::-webkit-scrollbar{height:6px;}
+  .swipe-track::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+  .swipe-card{
+    scroll-snap-align:start;flex:0 0 220px;background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.15);border-top:3px solid var(--teal);border-radius:6px;padding:1.2rem;
+  }
+  .swipe-card svg{margin-bottom:.7rem;}
+  .swipe-card .sw-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);margin-bottom:.4rem;}
+  .swipe-card p{font-size:.85rem;margin:0;opacity:.85;}
+
+  /* ===== MATCHING GAME ===== */
+  .match-wrap{display:flex;gap:2rem;flex-wrap:wrap;margin:1.4rem 0 .6rem;}
+  .match-col{flex:1;min-width:220px;}
+  .match-col .mc-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.7rem;}
+  .match-item{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.2);border-radius:4px;
+    padding:.7rem .9rem;margin-bottom:.6rem;cursor:pointer;font-size:.88rem;transition:.15s;
+  }
+  .match-item:hover{border-color:var(--gold);}
+  .match-item.selected{border-color:var(--bordeaux);background:#fff;box-shadow:0 0 0 2px var(--bordeaux) inset;}
+  .match-item.matched{background:var(--teal-light);border-color:var(--ok);color:var(--ok);cursor:default;pointer-events:none;}
+  .match-item.wrong{background:#F5E4E4;border-color:var(--bad);}
+  .match-status{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--teal);margin-top:.4rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 01 · Tema 4</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 01 · Servicio de Alimentos y Bebidas</div>
+  <h1 class="title">Identificación de Equipo y Utensilios en el Servicio</h1>
+  <p class="subtitle">Plaqué, cristalería, mantelería y accesorios de bar — el vocabulario visual del servicio</p>
+</header>
+
+<main>
+
+  <p class="lead">Antes de servir una sola mesa, todo colaborador debe reconocer a simple vista cada
+  pieza de equipo: para qué sirve, cómo se llama y cómo se cuida. Esta página reúne las cinco categorías
+  de equipo que todo mesero, capitán o bartender debe dominar.</p>
+
+  <h2 class="section-title"><span class="num">4.1</span> Plaqué o cubierto</h2>
+  <p class="hint">Toca cada pieza para ver su nombre y uso.</p>
+  <div class="gallery" id="gallery-cubiertos"></div>
+
+  <h2 class="section-title"><span class="num">4.2</span> Cristalería</h2>
+  <p class="hint">Toca cada copa o vaso para ver su nombre y uso.</p>
+  <div class="gallery" id="gallery-cristaleria"></div>
+
+  <h2 class="section-title"><span class="num">4.3</span> Mantelería</h2>
+  <div class="swipe-hint">← desliza para ver todas →</div>
+  <div class="swipe-track" id="swipe-manteleria"></div>
+
+  <h2 class="section-title"><span class="num">4.4</span> Accesorios de bar</h2>
+  <p class="hint">Selecciona un accesorio y luego su función correcta para formar la pareja.</p>
+  <div class="match-wrap">
+    <div class="match-col">
+      <div class="mc-label">Accesorio</div>
+      <div id="match-terms"></div>
+    </div>
+    <div class="match-col">
+      <div class="mc-label">Función</div>
+      <div id="match-defs"></div>
+    </div>
+  </div>
+  <div class="match-status" id="match-status">0 de 5 parejas encontradas</div>
+
+  <h2 class="section-title"><span class="num">4.5</span> Limpieza de equipo</h2>
+  <ul class="plain">
+    <li><strong>Cristalería:</strong> se pule con vapor de agua caliente y un paño de microfibra sin pelusa, nunca con servilletas de tela normales.</li>
+    <li><strong>Cubiertos:</strong> se revisan pieza por pieza contra la luz para detectar manchas de agua o residuos antes de montar la mesa.</li>
+    <li><strong>Mantelería:</strong> se revisa que no tenga manchas ni quemaduras de cigarro antes de tenderse; cualquier pieza dañada se retira del servicio.</li>
+    <li><strong>Accesorios de bar:</strong> se lavan y desinfectan después de cada turno, con especial atención a coladores y cucharas por el contacto directo con bebidas.</li>
+  </ul>
+
+</main>
+
+<div class="page-nav">
+  <a href="u1-servicio-de-mesas.html">← Anterior: Servicio de mesas</a>
+  <a href="index.html">Índice</a>
+  <a href="u1-normatividad-servicio.html">Siguiente: Normatividad de servicio →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 01 · Tema: Identificación de equipo y utensilios</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-name" id="modal-name"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+  </div>
+</div>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+function svgEl(inner, vb="0 0 60 80"){
+  return `<svg viewBox="${vb}" width="52" height="70" fill="none" stroke="#5C1A2E" stroke-width="2" stroke-linecap="round">${inner}</svg>`;
+}
+const iconFork = svgEl(`<line x1="16" y1="6" x2="16" y2="30"/><line x1="24" y1="6" x2="24" y2="30"/><line x1="32" y1="6" x2="32" y2="30"/><path d="M16 30 Q24 40 24 40 Q24 40 32 30"/><line x1="24" y1="40" x2="24" y2="74"/>`);
+const iconKnife = svgEl(`<path d="M22 6 Q34 10 34 34 Q34 40 24 40" fill="none"/><line x1="24" y1="40" x2="24" y2="74"/>`);
+const iconSpoon = svgEl(`<ellipse cx="24" cy="18" rx="11" ry="15"/><line x1="24" y1="33" x2="24" y2="74"/>`);
+const iconButterKnife = svgEl(`<path d="M20 8 Q32 10 30 26 Q28 34 22 34" fill="none"/><line x1="24" y1="34" x2="24" y2="74"/>`);
+const iconTongs = svgEl(`<path d="M14 6 Q10 40 20 70"/><path d="M34 6 Q38 40 28 70"/>`);
+
+const cubiertos = [
+  {n:"Tenedor trinche", i:iconFork, d:"El tenedor principal, usado para el plato fuerte. Es el más grande del set de cubiertos."},
+  {n:"Cuchillo trinche", i:iconKnife, d:"Cuchillo principal para cortar el plato fuerte, se coloca a la derecha del plato con el filo hacia adentro."},
+  {n:"Cuchara sopera", i:iconSpoon, d:"Se usa para consomés y sopas. Bowl más profundo que la cuchara de postre."},
+  {n:"Tenedor de ensalada", i:iconFork, d:"Más pequeño que el trinche, se coloca a la izquierda, afuera del tenedor principal."},
+  {n:"Cuchillo de pescado", i:iconKnife, d:"Hoja ancha y roma, diseñada para separar la carne del pescado sin necesidad de filo cortante."},
+  {n:"Cuchara de postre", i:iconSpoon, d:"Más pequeña que la sopera, se coloca horizontal arriba del plato junto al tenedor de postre."},
+  {n:"Cuchillo de mantequilla", i:iconButterKnife, d:"Cuchillo pequeño y romo, se usa junto al plato de pan para untar mantequilla."},
+  {n:"Pinzas para caracoles", i:iconTongs, d:"Utensilio especializado que sostiene el caparazón mientras se extrae el interior con un tenedor pequeño."}
+];
+
+const iconMartini = svgEl(`<path d="M10 10 L40 10 L25 34 Z"/><line x1="25" y1="34" x2="25" y2="66"/><line x1="14" y1="70" x2="36" y2="70"/>`);
+const iconFlute = svgEl(`<path d="M18 8 Q14 40 22 58 L28 58 Q36 40 32 8 Z"/><line x1="25" y1="58" x2="25" y2="70"/><line x1="14" y1="74" x2="36" y2="74"/>`);
+const iconWine = svgEl(`<path d="M14 8 Q10 34 25 38 Q40 34 36 8 Z"/><line x1="25" y1="38" x2="25" y2="68"/><line x1="14" y1="72" x2="36" y2="72"/>`);
+const iconRocks = svgEl(`<rect x="12" y="28" width="26" height="34" rx="2"/>`);
+const iconCollins = svgEl(`<rect x="16" y="10" width="18" height="56" rx="2"/>`);
+const iconMargarita = svgEl(`<path d="M8 14 Q25 40 42 14 Z"/><line x1="25" y1="30" x2="25" y2="66"/><line x1="14" y1="70" x2="36" y2="70"/>`);
+
+const cristaleria = [
+  {n:"Copa de agua", i:iconWine, d:"La más grande de las copas de mesa, se coloca arriba del cuchillo, es la primera en la fila."},
+  {n:"Copa de vino tinto", i:iconWine, d:"Bowl más amplio que el de vino blanco, permite que el vino oxigene y libere aromas."},
+  {n:"Copa de vino blanco", i:iconWine, d:"Bowl más angosto que el tinto, mantiene la temperatura fría del vino por más tiempo."},
+  {n:"Copa flauta", i:iconFlute, d:"Alta y angosta, conserva las burbujas de vinos espumosos y champagne."},
+  {n:"Vaso old fashioned", i:iconRocks, d:"Vaso bajo y ancho usado para cocteles servidos con hielo directo, como el whisky en las rocas."},
+  {n:"Vaso collins", i:iconCollins, d:"Alto y angosto, se usa para cocteles largos con mucho hielo y refresco, como el gin & tonic."},
+  {n:"Copa martini", i:iconMartini, d:"Bowl triangular en forma de cono, para cocteles servidos sin hielo como el martini clásico."},
+  {n:"Copa margarita", i:iconMargarita, d:"Bowl ancho y bajo, ideal para cocteles frozen o con escarchado de sal en el borde."}
+];
+
+function buildGallery(containerId, items){
+  const el = document.getElementById(containerId);
+  items.forEach(item=>{
+    const card = document.createElement('div');
+    card.className = 'g-card';
+    card.innerHTML = item.i + `<div class="g-name">${item.n}</div>`;
+    card.addEventListener('click', ()=>openModal(item));
+    el.appendChild(card);
+  });
+}
+buildGallery('gallery-cubiertos', cubiertos);
+buildGallery('gallery-cristaleria', cristaleria);
+
+function openModal(item){
+  document.getElementById('modal-icon').innerHTML = item.i.replace('width="52" height="70"','width="72" height="96"');
+  document.getElementById('modal-name').textContent = item.n;
+  document.getElementById('modal-desc').textContent = item.d;
+  document.getElementById('modal').classList.add('open');
+}
+document.getElementById('modal-close').addEventListener('click', ()=>document.getElementById('modal').classList.remove('open'));
+document.getElementById('modal').addEventListener('click', e=>{ if(e.target.id==='modal') e.currentTarget.classList.remove('open'); });
+
+// Mantelería swipe gallery
+const iconCloth = svgEl(`<rect x="6" y="20" width="48" height="40" rx="2"/>`, "0 0 60 80");
+const manteleria = [
+  {n:"Mantel", d:"Cubre toda la mesa, debe caer de forma uniforme por los cuatro lados, entre 20 y 30 cm."},
+  {n:"Cubremantel / Muletón", d:"Protector debajo del mantel que amortigua ruido y protege la mesa de calor y derrames."},
+  {n:"Servilleta de tela", d:"Se dobla de forma decorativa y se coloca sobre el plato base o a un costado del montaje."},
+  {n:"Servilleta de cóctel", d:"Más pequeña, se usa en el bar para colocar bajo bebidas y evitar marcas de humedad."}
+];
+const swipeTrack = document.getElementById('swipe-manteleria');
+manteleria.forEach(item=>{
+  const card = document.createElement('div');
+  card.className = 'swipe-card';
+  card.innerHTML = iconCloth + `<div class="sw-name">${item.n}</div><p>${item.d}</p>`;
+  swipeTrack.appendChild(card);
+});
+
+// Matching game
+const pairs = [
+  {term:"Jigger", def:"Mide porciones exactas de licor al preparar un coctel"},
+  {term:"Coctelera", def:"Mezcla y enfría los ingredientes de un coctel agitándolos con hielo"},
+  {term:"Colador Hawthorne", def:"Retira el hielo y los sólidos al servir el coctel en la copa"},
+  {term:"Cuchara bailarina", def:"Mezcla suavemente cocteles que se preparan directo en el vaso"},
+  {term:"Machacador (muddler)", def:"Extrae aromas y jugos de hierbas o frutas presionándolas en el vaso"}
+];
+let shuffledDefs = [...pairs].sort(()=>Math.random()-0.5);
+let selectedTerm = null, selectedDef = null, matchedCount = 0;
+
+const termsEl = document.getElementById('match-terms');
+const defsEl = document.getElementById('match-defs');
+
+pairs.forEach(p=>{
+  const d = document.createElement('div');
+  d.className = 'match-item';
+  d.textContent = p.term;
+  d.dataset.term = p.term;
+  d.addEventListener('click', ()=>{
+    if(d.classList.contains('matched')) return;
+    document.querySelectorAll('#match-terms .match-item').forEach(x=>x.classList.remove('selected'));
+    d.classList.add('selected');
+    selectedTerm = d;
+    tryMatch();
+  });
+  termsEl.appendChild(d);
+});
+
+shuffledDefs.forEach(p=>{
+  const d = document.createElement('div');
+  d.className = 'match-item';
+  d.textContent = p.def;
+  d.dataset.term = p.term;
+  d.addEventListener('click', ()=>{
+    if(d.classList.contains('matched')) return;
+    document.querySelectorAll('#match-defs .match-item').forEach(x=>x.classList.remove('selected'));
+    d.classList.add('selected');
+    selectedDef = d;
+    tryMatch();
+  });
+  defsEl.appendChild(d);
+});
+
+function tryMatch(){
+  if(!selectedTerm || !selectedDef) return;
+  if(selectedTerm.dataset.term === selectedDef.dataset.term){
+    selectedTerm.classList.add('matched');
+    selectedDef.classList.add('matched');
+    selectedTerm.classList.remove('selected');
+    selectedDef.classList.remove('selected');
+    matchedCount++;
+    document.getElementById('match-status').textContent = matchedCount + ' de ' + pairs.length + ' parejas encontradas';
+  } else {
+    selectedTerm.classList.add('wrong');
+    selectedDef.classList.add('wrong');
+    setTimeout(()=>{
+      selectedTerm.classList.remove('wrong','selected');
+      selectedDef.classList.remove('wrong','selected');
+    }, 500);
+  }
+  selectedTerm = null; selectedDef = null;
+}
+</script>
+
+</body>
+</html>

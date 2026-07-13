@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servicio de mesas · Unidad 1 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.2rem,5.5vw,3.6rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:800px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.65rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  ul.plain{margin:0 0 1rem 1.2rem;}
+  ul.plain li{margin-bottom:.45rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== FLIP CARDS ===== */
+  .flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;margin:1.4rem 0 1.8rem;}
+  .flip-card{
+    perspective:1000px;height:150px;cursor:pointer;
+  }
+  .flip-inner{
+    position:relative;width:100%;height:100%;text-align:left;
+    transition:transform .5s;transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute;inset:0;backface-visibility:hidden;
+    border-radius:5px;padding:1.1rem;display:flex;flex-direction:column;justify-content:center;
+  }
+  .flip-front{background:var(--bordeaux);color:var(--linen-light);}
+  .flip-front .fc-label{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;}
+  .flip-front .fc-text{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;}
+  .flip-back{background:var(--teal-light);border:1px solid rgba(63,93,88,.35);transform:rotateY(180deg);}
+  .flip-back .fc-label{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;color:var(--teal);text-transform:uppercase;margin-bottom:.5rem;}
+  .flip-back .fc-text{font-size:.88rem;}
+  .flip-tap{position:absolute;bottom:.5rem;right:.7rem;font-family:'Space Mono',monospace;font-size:.62rem;opacity:.6;}
+
+  /* ===== COMPARISON TOGGLE ===== */
+  .compare-wrap{display:flex;gap:1rem;flex-wrap:wrap;margin:1.4rem 0 1.8rem;}
+  .compare-col{
+    flex:1;min-width:230px;background:var(--linen-light);border:2px solid transparent;border-radius:6px;
+    padding:1.3rem 1.4rem;transition:.2s;
+  }
+  .compare-col.left{border-color:var(--gold);}
+  .compare-col.right{border-color:var(--teal);}
+  .compare-title{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+  .compare-col.left .compare-title{color:var(--bordeaux);}
+  .compare-col.right .compare-title{color:var(--teal);}
+  .compare-col ul{margin-left:1.1rem;font-size:.9rem;}
+  .compare-col li{margin-bottom:.4rem;}
+  .popover-badge{
+    display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;
+    background:var(--gold);color:var(--bordeaux-dark);font-family:'Space Mono',monospace;font-size:.72rem;
+    font-weight:700;cursor:pointer;flex-shrink:0;margin-left:.3rem;
+  }
+  .popover-box{
+    display:none;background:var(--bordeaux-dark);color:var(--linen-light);font-size:.85rem;
+    padding:.9rem 1rem;border-radius:5px;margin-top:1rem;
+  }
+  .popover-box.open{display:block;}
+
+  /* ===== STEPPER TIMELINE ===== */
+  .stepper{display:flex;justify-content:space-between;position:relative;margin:2rem 0 .5rem;}
+  .stepper::before{
+    content:"";position:absolute;top:17px;left:5%;right:5%;height:2px;background:rgba(38,33,28,.2);
+  }
+  .stepper-dot{
+    position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+    cursor:pointer;flex:1;
+  }
+  .stepper-dot .dot{
+    width:34px;height:34px;border-radius:50%;background:var(--linen-light);border:2px solid rgba(38,33,28,.3);
+    display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:.8rem;
+    transition:.2s;
+  }
+  .stepper-dot.active .dot{background:var(--bordeaux);border-color:var(--bordeaux);color:var(--gold);}
+  .stepper-dot span.label{font-size:.7rem;text-align:center;font-family:'Space Mono',monospace;opacity:.75;max-width:80px;}
+  .stepper-dot.active span.label{color:var(--bordeaux);opacity:1;font-weight:700;}
+  .stepper-panel{
+    display:none;background:var(--linen-light);border:1px solid rgba(38,33,28,.15);
+    border-radius:5px;padding:1.4rem 1.5rem;margin-top:1.6rem;
+  }
+  .stepper-panel.active{display:block;}
+  .stepper-panel h4{font-family:'Fraunces',serif;color:var(--bordeaux);margin-bottom:.5rem;font-size:1.05rem;}
+
+  /* ===== GAUGE CHECKLIST ===== */
+  .gauge-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.5rem;margin:1.5rem 0;}
+  .gauge-title{font-family:'Fraunces',serif;font-weight:600;font-size:1.1rem;margin-bottom:.3rem;color:var(--bordeaux);}
+  .gauge-bar-track{width:100%;height:14px;background:rgba(38,33,28,.1);border-radius:7px;overflow:hidden;margin:.9rem 0 1.2rem;}
+  .gauge-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width .3s;}
+  .gauge-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;}
+  .gauge-item{display:flex;align-items:center;gap:.6rem;font-size:.9rem;cursor:pointer;}
+  .gauge-item input{accent-color:var(--teal);width:16px;height:16px;}
+  .gauge-item.checked span{opacity:.5;text-decoration:line-through;}
+  .gauge-pct{font-family:'Space Mono',monospace;font-size:.85rem;color:var(--teal);}
+
+  /* ===== TRUE/FALSE QUIZ ===== */
+  .tf-score{
+    display:flex;justify-content:space-between;align-items:center;background:var(--bordeaux-dark);color:var(--linen-light);
+    padding:.8rem 1.2rem;border-radius:5px 5px 0 0;font-family:'Space Mono',monospace;font-size:.8rem;
+  }
+  .tf-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-top:none;border-radius:0 0 5px 5px;padding:1.5rem;margin-bottom:1.8rem;}
+  .tf-q{
+    display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 0;
+    border-bottom:1px dotted rgba(38,33,28,.2);flex-wrap:wrap;
+  }
+  .tf-q:last-child{border-bottom:none;}
+  .tf-statement{flex:1;min-width:200px;font-size:.95rem;}
+  .tf-buttons{display:flex;gap:.5rem;}
+  .tf-btn{
+    font-family:'Space Mono',monospace;font-size:.8rem;font-weight:700;width:42px;height:38px;
+    border-radius:4px;border:1px solid rgba(38,33,28,.3);background:#fff;cursor:pointer;transition:.15s;
+  }
+  .tf-btn:hover{border-color:var(--bordeaux);}
+  .tf-btn.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);}
+  .tf-btn.incorrect{background:#F5E4E4;border-color:var(--bad);color:var(--bad);}
+  .tf-btn:disabled{cursor:default;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+
+  @media(max-width:600px){
+    .stepper span.label{display:none;}
+    .compare-wrap{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 01 · Tema 3 de 9</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 01 · Servicio de Alimentos y Bebidas</div>
+  <h1 class="title">Servicio de Mesas</h1>
+  <p class="subtitle">La técnica detrás de cada plato que llega y cada plato que se retira</p>
+</header>
+
+<main>
+
+  <p class="lead">El servicio de mesas es la ejecución en vivo de todo lo que el montaje dejó preparado.
+  Aquí es donde la técnica —de qué lado se sirve, cómo se sostiene la charola, cuándo se retira un plato—
+  se convierte en la experiencia real del comensal.</p>
+
+  <h2 class="section-title"><span class="num">3.1</span> Reglas de oro del servicio</h2>
+  <p class="hint">Toca cada tarjeta para ver por qué existe la regla.</p>
+  <div class="flip-grid" id="flip-grid-1">
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">Servir por la izquierda</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">Deja libre la mano derecha del mesero, generalmente más hábil, para manipular la charola con seguridad.</div></div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">Bebidas por la derecha</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">Las copas y vasos ya están del lado derecho del montaje, así se evita cruzar brazos sobre el comensal.</div></div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">Nunca cruzar frente al comensal</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">Evita incomodar o golpear al cliente y reduce el riesgo de derrames sobre su ropa.</div></div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">El platillo se presenta hacia el comensal</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">La proteína o el elemento principal debe quedar de frente, como se vería en la carta o en la foto del menú.</div></div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">No apilar vajilla sucia en mesa</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">Apilar frente al cliente se ve poco profesional y puede generar ruido o accidentes.</div></div>
+    </div></div>
+    <div class="flip-card"><div class="flip-inner">
+      <div class="flip-face flip-front"><div class="fc-label">Regla</div><div class="fc-text">Orden de cortesía al servir</div><div class="flip-tap">toca ↻</div></div>
+      <div class="flip-face flip-back"><div class="fc-label">Por qué</div><div class="fc-text">Se sirve primero a mujeres, personas mayores y niños; el anfitrión de la mesa suele ser el último.</div></div>
+    </div></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">3.2</span> ¿Izquierda o derecha?</h2>
+  <div class="compare-wrap">
+    <div class="compare-col left">
+      <div class="compare-title">⟵ Por la izquierda</div>
+      <ul>
+        <li>Servir alimentos (platos fuertes, entradas, postres)</li>
+        <li>Retirar el plato de pan</li>
+        <li>Colocar platos vacíos antes del siguiente tiempo</li>
+      </ul>
+    </div>
+    <div class="compare-col right">
+      <div class="compare-title">Por la derecha ⟶ <span class="popover-badge" id="pop-badge">?</span></div>
+      <ul>
+        <li>Servir y retirar bebidas</li>
+        <li>Retirar platos usados</li>
+        <li>Servir vino y agua durante el consumo</li>
+      </ul>
+    </div>
+  </div>
+  <div class="popover-box" id="pop-box">
+    <strong>Excepción común:</strong> en montajes muy cerrados o mesas redondas pequeñas, algunos
+    restaurantes optan por servir todo por la derecha para reducir movimientos. Lo importante no es la
+    regla exacta, sino la <em>consistencia</em>: todo el equipo debe seguir el mismo criterio en el mismo servicio.
+  </div>
+
+  <h2 class="section-title"><span class="num">3.3</span> Secuencia de atención al comensal</h2>
+  <p class="hint">Da clic en cada etapa del servicio.</p>
+  <div class="stepper" id="stepper">
+    <div class="stepper-dot active" data-step="0"><div class="dot">1</div><span class="label">Recepción</span></div>
+    <div class="stepper-dot" data-step="1"><div class="dot">2</div><span class="label">Toma de comanda</span></div>
+    <div class="stepper-dot" data-step="2"><div class="dot">3</div><span class="label">Servicio</span></div>
+    <div class="stepper-dot" data-step="3"><div class="dot">4</div><span class="label">Seguimiento</span></div>
+    <div class="stepper-dot" data-step="4"><div class="dot">5</div><span class="label">Retiro y cuenta</span></div>
+  </div>
+
+  <div class="stepper-panel active" data-panel="0">
+    <h4>1 · Recepción</h4>
+    <p>Saludo cordial, acompañar al comensal a la mesa asignada, ayudar a acomodar sillas y presentar el
+    menú abierto en la primera página.</p>
+  </div>
+  <div class="stepper-panel" data-panel="1">
+    <h4>2 · Toma de comanda</h4>
+    <p>Dar tiempo razonable para decidir, ofrecer recomendaciones, anotar con claridad alergias o
+    peticiones especiales y repetir la orden en voz alta para confirmar.</p>
+  </div>
+  <div class="stepper-panel" data-panel="2">
+    <h4>3 · Servicio</h4>
+    <p>Servir en el orden correcto (bebidas, entrada, plato fuerte, postre), respetando el lado de
+    servicio y anunciando brevemente cada platillo al colocarlo.</p>
+  </div>
+  <div class="stepper-panel" data-panel="3">
+    <h4>4 · Seguimiento durante el consumo</h4>
+    <p>Verificar cada 2-3 minutos si todo está en orden, reponer agua o pan, y retirar platos únicamente
+    cuando todos los comensales de la mesa hayan terminado ese tiempo.</p>
+  </div>
+  <div class="stepper-panel" data-panel="4">
+    <h4>5 · Retiro y cuenta</h4>
+    <p>Retirar migajero antes del postre, ofrecer café o digestivos, y presentar la cuenta solo cuando
+    el comensal la solicite o dé señales claras de haber terminado.</p>
+  </div>
+
+  <h2 class="section-title"><span class="num">3.4</span> Checklist de buenas prácticas</h2>
+  <div class="gauge-box">
+    <div class="gauge-title">Nivel de cumplimiento del servicio</div>
+    <div class="gauge-bar-track"><div class="gauge-bar-fill" id="gauge-fill"></div></div>
+    <div class="gauge-list" id="gauge-list">
+      <label class="gauge-item"><input type="checkbox"><span>Sirvo alimentos por la izquierda</span></label>
+      <label class="gauge-item"><input type="checkbox"><span>Sirvo bebidas por la derecha</span></label>
+      <label class="gauge-item"><input type="checkbox"><span>Nunca cruzo frente al comensal</span></label>
+      <label class="gauge-item"><input type="checkbox"><span>Anuncio el platillo al servirlo</span></label>
+      <label class="gauge-item"><input type="checkbox"><span>Retiro solo cuando toda la mesa terminó</span></label>
+      <label class="gauge-item"><input type="checkbox"><span>No apilo vajilla sucia frente al cliente</span></label>
+    </div>
+    <div class="gauge-pct" id="gauge-pct">0% completado</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">3.5</span> Autoevaluación rápida</h2>
+  <div class="tf-score">
+    <span>VERDADERO O FALSO</span>
+    <span id="tf-score-count">Aciertos: 0/5</span>
+  </div>
+  <div class="tf-box" id="tf-box">
+    <div class="tf-q" data-answer="true">
+      <div class="tf-statement">1. Las bebidas siempre se sirven por la izquierda.</div>
+      <div class="tf-buttons"><button class="tf-btn" data-val="false">F</button><button class="tf-btn" data-val="true">V</button></div>
+    </div>
+    <div class="tf-q" data-answer="true">
+      <div class="tf-statement">2. El filo del cuchillo de servicio nunca debe apuntar hacia el comensal.</div>
+      <div class="tf-buttons"><button class="tf-btn" data-val="false">F</button><button class="tf-btn" data-val="true">V</button></div>
+    </div>
+    <div class="tf-q" data-answer="false">
+      <div class="tf-statement">3. Está bien retirar el plato de un comensal aunque otros en la mesa sigan comiendo.</div>
+      <div class="tf-buttons"><button class="tf-btn" data-val="false">F</button><button class="tf-btn" data-val="true">V</button></div>
+    </div>
+    <div class="tf-q" data-answer="true">
+      <div class="tf-statement">4. El platillo se presenta con el elemento principal hacia el comensal.</div>
+      <div class="tf-buttons"><button class="tf-btn" data-val="false">F</button><button class="tf-btn" data-val="true">V</button></div>
+    </div>
+    <div class="tf-q" data-answer="false">
+      <div class="tf-statement">5. La cuenta se debe llevar a la mesa apenas se sirve el postre, sin que el cliente la pida.</div>
+      <div class="tf-buttons"><button class="tf-btn" data-val="false">F</button><button class="tf-btn" data-val="true">V</button></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u1-montaje-de-mesas.html">← Anterior: Montaje de mesas</a>
+  <a href="index.html">Índice</a>
+  <a href="u1-identificacion-de-equipo.html">Siguiente: Identificación de equipo →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 01 · Tema: Servicio de mesas</footer>
+
+<script>
+  // Flip cards
+  document.querySelectorAll('.flip-card').forEach(card=>{
+    card.addEventListener('click',()=>card.classList.toggle('flipped'));
+  });
+
+  // Popover
+  document.getElementById('pop-badge').addEventListener('click',()=>{
+    document.getElementById('pop-box').classList.toggle('open');
+  });
+
+  // Stepper
+  document.querySelectorAll('.stepper-dot').forEach(dot=>{
+    dot.addEventListener('click',()=>{
+      document.querySelectorAll('.stepper-dot').forEach(d=>d.classList.remove('active'));
+      document.querySelectorAll('.stepper-panel').forEach(p=>p.classList.remove('active'));
+      dot.classList.add('active');
+      document.querySelector('.stepper-panel[data-panel="'+dot.dataset.step+'"]').classList.add('active');
+    });
+  });
+
+  // Gauge checklist
+  const gaugeItems = document.querySelectorAll('#gauge-list input');
+  const gaugeFill = document.getElementById('gauge-fill');
+  const gaugePct = document.getElementById('gauge-pct');
+  gaugeItems.forEach(box=>{
+    box.addEventListener('change',()=>{
+      box.closest('.gauge-item').classList.toggle('checked', box.checked);
+      const done = document.querySelectorAll('#gauge-list input:checked').length;
+      const pct = Math.round((done/gaugeItems.length)*100);
+      gaugeFill.style.width = pct+'%';
+      gaugePct.textContent = pct+'% completado';
+    });
+  });
+
+  // True/False quiz with score
+  let tfScore = 0;
+  const tfTotal = document.querySelectorAll('.tf-q').length;
+  document.getElementById('tf-score-count').textContent = 'Aciertos: 0/'+tfTotal;
+  document.querySelectorAll('.tf-q').forEach(q=>{
+    const answer = q.dataset.answer === 'true';
+    const btns = q.querySelectorAll('.tf-btn');
+    btns.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        if(btn.disabled) return;
+        const val = btn.dataset.val === 'true';
+        btns.forEach(b=>b.disabled=true);
+        if(val===answer){
+          btn.classList.add('correct');
+          tfScore++;
+        }else{
+          btn.classList.add('incorrect');
+          q.querySelector('.tf-btn[data-val="'+answer+'"]').classList.add('correct');
+        }
+        document.getElementById('tf-score-count').textContent = 'Aciertos: '+tfScore+'/'+tfTotal;
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

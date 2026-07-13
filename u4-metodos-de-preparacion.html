@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Métodos de preparación · Unidad 4 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:880px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== MISE EN PLACE GRID ===== */
+  .mep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.9rem;margin:1.3rem 0 1.8rem;}
+  .mep-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:5px;padding:.9rem 1rem;font-size:.85rem;}
+  .mep-card strong{display:block;color:var(--bordeaux);font-family:'Fraunces',serif;font-size:.95rem;margin-bottom:.3rem;}
+
+  /* ===== METHOD CARDS WITH ANIMATION ===== */
+  .method-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.1rem;margin:1.4rem 0 1.8rem;}
+  .method-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.4rem;text-align:center;}
+  .anim-stage{width:80px;height:80px;margin:0 auto .8rem;position:relative;display:flex;align-items:center;justify-content:center;}
+  .method-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:1.1rem;margin-bottom:.5rem;}
+  .method-desc{font-size:.85rem;opacity:.85;margin-bottom:.6rem;text-align:left;}
+  .method-ex{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--teal);}
+  .play-btn{
+    font-family:'Space Mono',monospace;font-size:.7rem;background:var(--bordeaux);color:var(--gold);
+    border:none;padding:.4rem .8rem;border-radius:16px;cursor:pointer;margin-top:.6rem;
+  }
+
+  /* animations */
+  .icon-pour{width:6px;height:20px;background:var(--teal);border-radius:2px;position:relative;top:-15px;}
+  .icon-pour.play{animation:pourDrop 1s ease-in infinite;}
+  @keyframes pourDrop{0%{transform:translateY(-10px);opacity:0;}30%{opacity:1;}100%{transform:translateY(25px);opacity:0;}}
+
+  .icon-stir{width:44px;height:44px;border:3px solid var(--teal);border-radius:50%;position:relative;}
+  .icon-stir::after{content:"";position:absolute;top:50%;left:50%;width:2px;height:20px;background:var(--bordeaux);transform-origin:top center;transform:translate(-50%,0) rotate(0deg);}
+  .icon-stir.play::after{animation:stirRotate 1.2s linear infinite;}
+  @keyframes stirRotate{from{transform:translate(-50%,0) rotate(0deg);}to{transform:translate(-50%,0) rotate(360deg);}}
+
+  .icon-shake{width:26px;height:40px;background:var(--bordeaux);border-radius:4px 4px 10px 10px;}
+  .icon-shake.play{animation:shakeJitter .25s ease-in-out infinite;}
+  @keyframes shakeJitter{0%,100%{transform:translateX(0) rotate(0deg);}25%{transform:translateX(-6px) rotate(-8deg);}75%{transform:translateX(6px) rotate(8deg);}}
+
+  .icon-blend{width:40px;height:40px;border-radius:50%;border:3px solid var(--gold);border-top-color:var(--bordeaux);}
+  .icon-blend.play{animation:blendSpin .5s linear infinite;}
+  @keyframes blendSpin{to{transform:rotate(360deg);}}
+
+  .icon-frozen{width:40px;height:40px;border-radius:50%;border:3px dashed var(--teal);position:relative;}
+  .icon-frozen.play{animation:blendSpin .8s linear infinite;}
+
+  .icon-flame{width:22px;height:32px;background:radial-gradient(circle,#F3C15C,var(--bordeaux));border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;}
+  .icon-flame.play{animation:flameFlicker .4s ease-in-out infinite alternate;}
+  @keyframes flameFlicker{from{transform:scale(1) translateY(0);opacity:.85;}to{transform:scale(1.15) translateY(-3px);opacity:1;}}
+
+  /* ===== QUADRANT MAP ===== */
+  .quad-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem 1.6rem 1.4rem;margin:1.4rem 0 1.8rem;}
+  .quad-frame{position:relative;width:100%;max-width:420px;aspect-ratio:1;margin:0 auto;border-left:2px solid rgba(38,33,28,.3);border-bottom:2px solid rgba(38,33,28,.3);}
+  .quad-dot{
+    position:absolute;width:16px;height:16px;border-radius:50%;background:var(--bordeaux);border:2px solid var(--gold);
+    transform:translate(-50%,50%);cursor:pointer;transition:.15s;
+  }
+  .quad-dot:hover, .quad-dot.active{background:var(--gold);}
+  .axis-label{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--teal);text-align:center;}
+  .axis-x{margin-top:.6rem;}
+  .axis-y{
+    position:absolute;left:-2.4rem;top:50%;transform:translateY(-50%) rotate(-90deg);white-space:nowrap;
+  }
+  .quad-info{margin-top:1.2rem;text-align:center;font-size:.88rem;min-height:1.4rem;}
+  .quad-info strong{color:var(--bordeaux);}
+
+  /* ===== QUIZ (icon choice) ===== */
+  .iq-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .iq-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:1rem;font-size:1.0rem;}
+  .iq-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:.6rem;}
+  .iq-opt{background:#fff;border:1px solid rgba(38,33,28,.25);border-radius:5px;padding:.7rem .4rem;text-align:center;cursor:pointer;font-size:.72rem;font-weight:600;transition:.15s;}
+  .iq-opt:hover{border-color:var(--gold);}
+  .iq-opt.correct{background:var(--teal-light);border-color:var(--ok);}
+  .iq-opt.incorrect{background:var(--bad-light);border-color:var(--bad);}
+  .iq-feedback{font-size:.85rem;font-style:italic;margin-top:.8rem;min-height:1.1rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 04 · Coctelería · Tema 2</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 04 · Coctelería</div>
+  <h1 class="title">Métodos de Preparación</h1>
+  <p class="subtitle">Seis técnicas, seis texturas distintas para el mismo vaso</p>
+</header>
+
+<main>
+
+  <p class="lead">El mismo grupo de ingredientes puede convertirse en bebidas completamente distintas
+  según cómo se preparen. El método no es un detalle técnico menor: define la textura, la temperatura y
+  hasta la cantidad de dilución que tendrá el coctel final.</p>
+
+  <h2 class="section-title"><span class="num">13.1</span> Mise en place de bar</h2>
+  <p>Antes de preparar el primer coctel del turno, la barra debe estar completamente lista:</p>
+  <div class="mep-grid">
+    <div class="mep-card"><strong>Hielo</strong>Suficiente para toda la barra, en distintos formatos según el método.</div>
+    <div class="mep-card"><strong>Garnishes</strong>Cítricos cortados, cerezas, aceitunas y hierbas listas para usar.</div>
+    <div class="mep-card"><strong>Jarabes</strong>Jarabe simple y otros preparados con anticipación.</div>
+    <div class="mep-card"><strong>Cristalería</strong>Limpia, pulida y, si aplica, previamente enfriada.</div>
+    <div class="mep-card"><strong>Herramientas</strong>Coctelera, jigger, colador y cuchara bailarina al alcance.</div>
+    <div class="mep-card"><strong>Barra</strong>Superficie limpia y organizada antes de abrir el servicio.</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">13.2</span> Los seis métodos</h2>
+  <p class="hint">Toca "Ver animación" para visualizar el movimiento de cada técnica.</p>
+
+  <div class="method-grid" id="method-grid"></div>
+
+  <h2 class="section-title"><span class="num">13.3</span> Mapa de dilución y textura</h2>
+  <p class="hint">Toca cada punto para ver cómo se compara un método frente a otro.</p>
+
+  <div class="quad-tool">
+    <div class="quad-frame" id="quad-frame"></div>
+    <div class="axis-label axis-x">Dilución →</div>
+    <div class="axis-label axis-y">Textura / aire →</div>
+    <div class="quad-info" id="quad-info">Toca un punto del mapa para ver el detalle.</div>
+  </div>
+
+  <h2 class="section-title"><span class="num">13.4</span> Autoevaluación</h2>
+  <p class="hint">Elige el método correcto para cada descripción.</p>
+
+  <div class="iq-box">
+    <div class="iq-q">1. "Se agita con fuerza en una coctelera junto con hielo, ideal para bebidas con jugo de limón."</div>
+    <div class="iq-opts" data-answer="batido"></div>
+    <div class="iq-feedback"></div>
+  </div>
+  <div class="iq-box">
+    <div class="iq-q">2. "Se mezcla con una cuchara bailarina en un vaso mezclador, sin aportar aire, para bebidas 100% alcohólicas."</div>
+    <div class="iq-opts" data-answer="refrescando"></div>
+    <div class="iq-feedback"></div>
+  </div>
+  <div class="iq-box">
+    <div class="iq-q">3. "Se enciende un licor de alta graduación como efecto final de la preparación."</div>
+    <div class="iq-opts" data-answer="flameado"></div>
+    <div class="iq-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u4-composicion-de-un-coctel.html">← Anterior: Composición de un coctel</a>
+  <a href="index.html">Índice</a>
+  <a href="u4-cocteles-alcoholicos.html">Siguiente: Cocteles alcohólicos →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 04 · Tema: Métodos de preparación</footer>
+
+<script>
+const methods = [
+  {id:"directo", n:"Método directo", icon:"pour", d:"Los ingredientes se vierten directamente en el vaso de servicio, sin mezclar aparte. Es el método más simple y rápido.", ex:"Cuba libre, Gin & tonic", diluc:22, textura:15},
+  {id:"refrescando", n:"Método refrescando", icon:"stir", d:"Se mezclan los ingredientes en un vaso mezclador con hielo, usando una cuchara bailarina, con movimiento circular suave. Enfría y diluye sin aportar aire.", ex:"Martini, Manhattan, Negroni", diluc:55, textura:12},
+  {id:"batido", n:"Método batido", icon:"shake", d:"Los ingredientes se agitan con fuerza en una coctelera con hielo. Aporta aire, textura sedosa y mayor dilución — ideal con jugos o claras de huevo.", ex:"Daiquiri, Whiskey Sour, Margarita", diluc:65, textura:65},
+  {id:"licuado", n:"Método licuado", icon:"blend", d:"Los ingredientes se procesan en licuadora junto con hielo, logrando una textura suave y homogénea, ideal cuando se usa fruta fresca en trozos.", ex:"Piña colada con fruta natural", diluc:75, textura:85},
+  {id:"frozen", n:"Método frozen", icon:"frozen", d:"Variante del licuado: se procesa con más hielo triturado hasta lograr consistencia de nieve, servido sin colar directo de la licuadora.", ex:"Margarita frozen, Daiquiri frozen", diluc:90, textura:95},
+  {id:"flameado", n:"Método flameado", icon:"flame", d:"Se prende fuego a un licor de alta graduación en el último paso, generando efecto visual y ligera caramelización de aromas. Requiere entrenamiento de seguridad.", ex:"Café flambeado, crepas suzette", diluc:20, textura:22}
+];
+
+const iconHtml = {
+  pour: '<div class="icon-pour"></div>',
+  stir: '<div class="icon-stir"></div>',
+  shake: '<div class="icon-shake"></div>',
+  blend: '<div class="icon-blend"></div>',
+  frozen: '<div class="icon-frozen"></div>',
+  flame: '<div class="icon-flame"></div>'
+};
+
+const methodGrid = document.getElementById('method-grid');
+methods.forEach(m=>{
+  const card = document.createElement('div');
+  card.className = 'method-card';
+  card.innerHTML = `
+    <div class="anim-stage">${iconHtml[m.icon]}</div>
+    <div class="method-name">${m.n}</div>
+    <div class="method-desc">${m.d}</div>
+    <div class="method-ex">Ej: ${m.ex}</div>
+    <button class="play-btn" data-icon="${m.icon}">▶ Ver animación</button>
+  `;
+  methodGrid.appendChild(card);
+});
+document.querySelectorAll('.play-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const stage = btn.parentElement.querySelector('.anim-stage > div');
+    stage.classList.toggle('play');
+    btn.textContent = stage.classList.contains('play') ? '⏸ Pausar' : '▶ Ver animación';
+  });
+});
+
+// Quadrant map
+const quadFrame = document.getElementById('quad-frame');
+const quadInfo = document.getElementById('quad-info');
+methods.forEach(m=>{
+  const dot = document.createElement('div');
+  dot.className = 'quad-dot';
+  dot.style.left = m.diluc+'%';
+  dot.style.bottom = m.textura+'%';
+  dot.addEventListener('click', ()=>{
+    document.querySelectorAll('.quad-dot').forEach(d=>d.classList.remove('active'));
+    dot.classList.add('active');
+    quadInfo.innerHTML = `<strong>${m.n}</strong> — dilución ${m.diluc<40?'baja':m.diluc<70?'media':'alta'},
+      textura ${m.textura<30?'limpia':m.textura<70?'ligeramente aireada':'espesa y aireada'}.`;
+  });
+  quadFrame.appendChild(dot);
+});
+
+// Icon-choice quiz
+const quizIcons = methods.map(m=>({id:m.id, label:m.n.replace('Método ',''), icon:m.icon}));
+document.querySelectorAll('.iq-opts').forEach(box=>{
+  const correct = box.dataset.answer;
+  const feedback = box.nextElementSibling;
+  quizIcons.forEach(q=>{
+    const opt = document.createElement('div');
+    opt.className = 'iq-opt';
+    opt.textContent = q.label;
+    opt.addEventListener('click', ()=>{
+      if(box.dataset.answered) return;
+      box.dataset.answered = "1";
+      if(q.id === correct){
+        opt.classList.add('correct');
+        feedback.textContent = '¡Correcto!';
+        feedback.style.color = '#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        feedback.textContent = 'No es correcto — la respuesta correcta se marca en verde.';
+        feedback.style.color = '#8C3B3B';
+        box.querySelectorAll('.iq-opt').forEach(o=>{
+          if(o.textContent === quizIcons.find(x=>x.id===correct).label) o.classList.add('correct');
+        });
+      }
+    });
+    box.appendChild(opt);
+  });
+});
+</script>
+
+</body>
+</html>

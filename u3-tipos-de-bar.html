@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipos de bar · Unidad 3 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:860px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== FUNCTIONAL CARDS ===== */
+  .fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.3rem 0 1.8rem;}
+  .fn-card2{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-top:3px solid var(--gold);border-radius:5px;padding:1.2rem;}
+  .fn-card2 .fnt{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);margin-bottom:.4rem;font-size:1.02rem;}
+  .fn-card2 p{font-size:.88rem;margin:0;opacity:.85;}
+
+  /* ===== FILTER + CARDS WITH STAT BARS ===== */
+  .filter-bar{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.3rem 0 1.5rem;}
+  .filter-btn{
+    font-family:'Space Mono',monospace;font-size:.75rem;background:var(--linen-light);
+    border:1px solid rgba(38,33,28,.25);padding:.5rem .9rem;border-radius:20px;cursor:pointer;transition:.15s;
+  }
+  .filter-btn:hover{border-color:var(--gold);}
+  .filter-btn.active{background:var(--bordeaux);color:var(--linen-light);border-color:var(--bordeaux);}
+  .bar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem;}
+  .bar-card{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;
+    padding:1.2rem 1.3rem;transition:.2s;
+  }
+  .bar-card.hidden{display:none;}
+  .bar-card .bc-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:1.05rem;margin-bottom:.3rem;}
+  .bar-card .bc-tags{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--teal);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em;}
+  .bar-card .bc-desc{font-size:.85rem;opacity:.85;margin-bottom:.8rem;}
+  .stat-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.35rem;}
+  .stat-label{font-size:.68rem;width:78px;flex-shrink:0;font-family:'Space Mono',monospace;opacity:.7;}
+  .stat-track{flex:1;height:6px;background:rgba(38,33,28,.1);border-radius:3px;overflow:hidden;}
+  .stat-fill{height:100%;background:var(--gold);}
+
+  /* ===== RECOMMENDER ===== */
+  .rec-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem;margin:1.4rem 0 1.8rem;}
+  .rec-q{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;text-align:center;margin-bottom:1.2rem;}
+  .rec-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;}
+  .rec-opt{
+    background:#fff;border:1px solid rgba(38,33,28,.25);border-radius:5px;padding:1rem;text-align:center;
+    cursor:pointer;font-size:.88rem;font-weight:600;transition:.15s;
+  }
+  .rec-opt:hover{border-color:var(--gold);background:var(--teal-light);}
+  .rec-result{
+    display:none;margin-top:1.4rem;background:var(--bordeaux);color:var(--linen-light);border-radius:6px;
+    padding:1.3rem 1.4rem;text-align:center;
+  }
+  .rec-result.open{display:block;}
+  .rec-result .rr-label{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+  .rec-result .rr-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.2rem;margin-bottom:.5rem;}
+  .rec-result .rr-desc{font-size:.9rem;opacity:.92;}
+  .rec-again{
+    font-family:'Space Mono',monospace;font-size:.72rem;background:none;color:var(--linen-light);
+    border:1px solid rgba(237,230,214,.4);padding:.4rem .8rem;border-radius:4px;cursor:pointer;margin-top:1rem;
+  }
+
+  /* ===== SWIPE CLASSIFIER ===== */
+  .sw-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.3rem 1.4rem;margin-bottom:1rem;}
+  .sw-desc{font-size:.93rem;margin-bottom:.9rem;font-style:italic;}
+  .sw-choices{display:flex;gap:.7rem;flex-wrap:wrap;}
+  .sw-choice{
+    flex:1;min-width:140px;font-family:'Space Mono',monospace;font-size:.78rem;background:#fff;
+    border:1px solid rgba(38,33,28,.25);padding:.6rem .8rem;border-radius:4px;cursor:pointer;transition:.15s;text-align:center;
+  }
+  .sw-choice:hover{border-color:var(--bordeaux);}
+  .sw-choice.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);}
+  .sw-choice.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 03 · El Bar · Tema 2</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 03 · El Bar</div>
+  <h1 class="title">Tipos de Bar</h1>
+  <p class="subtitle">De la cantina de barrio al speakeasy de autor — un mapa de estilos</p>
+</header>
+
+<main>
+
+  <p class="lead">No todos los bares se parecen, ni deberían. Un bar se puede clasificar por su
+  <strong>función</strong> dentro de un establecimiento, o por su <strong>concepto</strong>: la
+  atmósfera, la bebida protagonista y el tipo de experiencia que ofrece al cliente.</p>
+
+  <h2 class="section-title"><span class="num">9.1</span> Clasificación por función</h2>
+  <div class="fn-grid">
+    <div class="fn-card2">
+      <div class="fnt">Bar de barra</div>
+      <p>El bar visible al cliente, donde se sienta a consumir directamente frente al bartender. Es el
+      corazón social del espacio.</p>
+    </div>
+    <div class="fn-card2">
+      <div class="fnt">Bar de servicio</div>
+      <p>Bar "detrás de escena" que prepara bebidas para el salón de un restaurante; el cliente casi
+      nunca lo ve directamente.</p>
+    </div>
+    <div class="fn-card2">
+      <div class="fnt">Bar móvil / de banquete</div>
+      <p>Barra portátil armada para eventos y banquetes, diseñada para desmontarse y trasladarse según
+      la locación.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="num">9.2</span> Clasificación por concepto</h2>
+  <p class="hint">Filtra por ambiente para explorar cada estilo:</p>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" data-tag="todos">Todos</button>
+    <button class="filter-btn" data-tag="Elegante">Elegante</button>
+    <button class="filter-btn" data-tag="Casual">Casual</button>
+    <button class="filter-btn" data-tag="Temático">Temático</button>
+    <button class="filter-btn" data-tag="Nocturno">Nocturno</button>
+  </div>
+
+  <div class="bar-grid" id="bar-grid"></div>
+
+  <h2 class="section-title"><span class="num">9.3</span> ¿Qué bar es para ti?</h2>
+  <div class="rec-box">
+    <div class="rec-q">¿Qué buscas esta noche?</div>
+    <div class="rec-opts" id="rec-opts">
+      <div class="rec-opt" data-rec="Casual">Relajarme con amigos</div>
+      <div class="rec-opt" data-rec="Elegante">Una experiencia especial</div>
+      <div class="rec-opt" data-rec="Nocturno">Bailar y salir de fiesta</div>
+      <div class="rec-opt" data-rec="Temático">Algo con una temática divertida</div>
+    </div>
+    <div class="rec-result" id="rec-result"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">9.4</span> Autoevaluación: identifica el bar</h2>
+  <div id="swipe-quiz"></div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u3-historia-del-bar.html">← Anterior: Historia del bar</a>
+  <a href="index.html">Índice</a>
+  <a href="u3-clasificacion-de-bebidas-alcoholicas.html">Siguiente: Clasificación de bebidas alcohólicas →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 03 · Tema: Tipos de bar</footer>
+
+<script>
+const barTypes = [
+  {n:"Bar de autor", tags:["Elegante"], d:"Centrado en cocteles originales y de temporada, con mixología de precisión y una identidad propia muy marcada.", s:{Formalidad:4,Fiesta:2,Precio:5,Bebida:5}},
+  {n:"Pub", tags:["Casual"], d:"Ambiente relajado centrado en cerveza artesanal o de barril, comida sencilla y conversación.", s:{Formalidad:2,Fiesta:3,Precio:2,Bebida:3}},
+  {n:"Bar deportivo", tags:["Casual"], d:"Ambientado con pantallas para transmisión de eventos deportivos; cerveza y botanas son protagonistas.", s:{Formalidad:1,Fiesta:3,Precio:2,Bebida:2}},
+  {n:"Bar tiki", tags:["Temático"], d:"Ambientación tropical y polinesia, cocteles a base de ron y frutas, decoración exótica.", s:{Formalidad:3,Fiesta:4,Precio:4,Bebida:4}},
+  {n:"Vinoteca / Wine bar", tags:["Elegante"], d:"Especializado en vinos por copeo, con maridajes y personal capacitado en sommellerie.", s:{Formalidad:4,Fiesta:1,Precio:4,Bebida:5}},
+  {n:"Speakeasy", tags:["Elegante","Nocturno"], d:"Estilo clandestino inspirado en la Ley Seca, acceso discreto y coctelería clásica de alto nivel.", s:{Formalidad:5,Fiesta:2,Precio:5,Bebida:5}},
+  {n:"Rooftop bar", tags:["Elegante","Nocturno"], d:"Ubicado en azoteas o últimos pisos, con vista panorámica como parte central de la experiencia.", s:{Formalidad:4,Fiesta:3,Precio:5,Bebida:3}},
+  {n:"Cantina tradicional", tags:["Casual","Temático"], d:"Tradición mexicana con botana incluida, ambiente familiar y bebidas nacionales.", s:{Formalidad:1,Fiesta:3,Precio:1,Bebida:2}},
+  {n:"Bar de flair", tags:["Nocturno"], d:"El bartender realiza malabares y trucos visuales con botellas — la coctelería como espectáculo.", s:{Formalidad:2,Fiesta:5,Precio:3,Bebida:4}},
+  {n:"Nightclub con bar", tags:["Nocturno"], d:"Espacio centrado en música y baile; el bar funciona como apoyo rápido de bebidas de alta rotación.", s:{Formalidad:1,Fiesta:5,Precio:3,Bebida:1}}
+];
+
+const gridEl = document.getElementById('bar-grid');
+barTypes.forEach(b=>{
+  const card = document.createElement('div');
+  card.className = 'bar-card';
+  card.dataset.tags = b.tags.join(',');
+  const statsHtml = Object.entries(b.s).map(([k,v])=>`
+    <div class="stat-row"><span class="stat-label">${k}</span>
+    <div class="stat-track"><div class="stat-fill" style="width:${v*20}%"></div></div></div>
+  `).join('');
+  card.innerHTML = `<div class="bc-name">${b.n}</div>
+    <div class="bc-tags">${b.tags.join(' · ')}</div>
+    <div class="bc-desc">${b.d}</div>
+    ${statsHtml}`;
+  gridEl.appendChild(card);
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tag = btn.dataset.tag;
+    document.querySelectorAll('.bar-card').forEach(card=>{
+      const tags = card.dataset.tags.split(',');
+      card.classList.toggle('hidden', tag!=='todos' && !tags.includes(tag));
+    });
+  });
+});
+
+// Recommender
+const recData = {
+  Casual: {name:"Pub o Bar deportivo", desc:"Buscas un ambiente sin pretensiones, ideal para conversar o ver un partido con cerveza en mano."},
+  Elegante: {name:"Bar de autor, Vinoteca o Speakeasy", desc:"Quieres una experiencia cuidada, con coctelería o vinos de alto nivel y una atmósfera sofisticada."},
+  Nocturno: {name:"Bar de flair, Rooftop o Nightclub", desc:"Buscas energía, música y movimiento — un bar que sea parte del espectáculo de la noche."},
+  Temático: {name:"Bar tiki o Cantina tradicional", desc:"Te atrae una ambientación con carácter propio, que cuente una historia a través de la decoración y la bebida."}
+};
+document.querySelectorAll('.rec-opt').forEach(opt=>{
+  opt.addEventListener('click', ()=>{
+    const rec = recData[opt.dataset.rec];
+    const resultEl = document.getElementById('rec-result');
+    resultEl.innerHTML = `<div class="rr-label">Te recomendamos</div>
+      <div class="rr-name">${rec.name}</div>
+      <div class="rr-desc">${rec.desc}</div>
+      <button class="rec-again" id="rec-again">Elegir otra opción</button>`;
+    resultEl.classList.add('open');
+    document.getElementById('rec-again').addEventListener('click', ()=>{
+      resultEl.classList.remove('open');
+    });
+  });
+});
+
+// Swipe classifier quiz
+const swipeQs = [
+  {desc:"\"El bartender lanza la coctelera al aire mientras prepara tu bebida frente a ti.\"", a:"Bar de flair", b:"Vinoteca", correct:"Bar de flair"},
+  {desc:"\"Entras por una puerta sin letrero, detrás de lo que parece una tienda cualquiera.\"", a:"Pub", b:"Speakeasy", correct:"Speakeasy"},
+  {desc:"\"Botanas incluidas con cada bebida y música de banda de fondo.\"", a:"Cantina tradicional", b:"Rooftop bar", correct:"Cantina tradicional"},
+  {desc:"\"Vasos con sombrillitas, ron y decoración de palmeras por todos lados.\"", a:"Bar tiki", b:"Bar deportivo", correct:"Bar tiki"}
+];
+const swipeEl = document.getElementById('swipe-quiz');
+swipeQs.forEach(q=>{
+  const card = document.createElement('div');
+  card.className = 'sw-card';
+  card.innerHTML = `<div class="sw-desc">${q.desc}</div>
+    <div class="sw-choices">
+      <button class="sw-choice" data-val="${q.a}">${q.a}</button>
+      <button class="sw-choice" data-val="${q.b}">${q.b}</button>
+    </div>`;
+  swipeEl.appendChild(card);
+  card.querySelectorAll('.sw-choice').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const choices = card.querySelectorAll('.sw-choice');
+      choices.forEach(c=>c.disabled=true);
+      if(btn.dataset.val === q.correct){
+        btn.classList.add('correct');
+      }else{
+        btn.classList.add('incorrect');
+        choices.forEach(c=>{ if(c.dataset.val===q.correct) c.classList.add('correct'); });
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

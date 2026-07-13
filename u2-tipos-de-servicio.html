@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipos de servicio en un restaurante · Unidad 2 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:840px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  ul.plain{margin:0 0 1rem 1.2rem;}
+  ul.plain li{margin-bottom:.45rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  .term{border-bottom:1px dotted var(--bordeaux);cursor:pointer;color:var(--bordeaux);font-weight:600;}
+  .term-pop{
+    display:none;background:var(--bordeaux-dark);color:var(--linen-light);font-size:.82rem;
+    padding:.7rem .9rem;border-radius:5px;margin:.5rem 0 1rem;
+  }
+  .term-pop.open{display:block;}
+
+  /* ===== CAROUSEL ===== */
+  .carousel{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;
+    padding:2rem 1.6rem 1.6rem;margin:1.4rem 0 1.8rem;
+  }
+  .carousel-top{display:flex;align-items:center;gap:1rem;}
+  .car-arrow{
+    background:var(--bordeaux);color:var(--gold);border:none;width:38px;height:38px;border-radius:50%;
+    font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:.15s;
+  }
+  .car-arrow:hover{background:var(--bordeaux-dark);}
+  .car-slide{flex:1;text-align:center;}
+  .car-icon{margin:0 auto .8rem;}
+  .car-origin{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+  .car-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.4rem;color:var(--bordeaux);margin-bottom:.6rem;}
+  .car-desc{font-size:.92rem;max-width:52ch;margin:0 auto .6rem;}
+  .car-when{font-size:.85rem;font-style:italic;opacity:.75;max-width:52ch;margin:0 auto;}
+  .car-dots{display:flex;justify-content:center;gap:.5rem;margin-top:1.5rem;}
+  .car-dot{width:8px;height:8px;border-radius:50%;background:rgba(38,33,28,.25);cursor:pointer;border:none;padding:0;}
+  .car-dot.active{background:var(--bordeaux);width:22px;border-radius:4px;transition:.2s;}
+
+  /* ===== COMPARISON TABLE ===== */
+  .compare-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.5rem;margin:1.4rem 0 1.8rem;}
+  .compare-selects{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+  .compare-selects select{
+    flex:1;min-width:160px;font-family:'Work Sans',sans-serif;font-size:.9rem;padding:.6rem .7rem;
+    border-radius:4px;border:1px solid rgba(38,33,28,.3);background:#fff;color:var(--ink);
+  }
+  table.compare-table{width:100%;border-collapse:collapse;font-size:.87rem;}
+  table.compare-table th{
+    font-family:'Space Mono',monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;
+    text-align:left;padding:.6rem .5rem;color:var(--gold);background:var(--bordeaux);
+  }
+  table.compare-table td{padding:.65rem .5rem;border-bottom:1px solid rgba(38,33,28,.12);vertical-align:top;}
+  table.compare-table tr:last-child td{border-bottom:none;}
+  table.compare-table td:first-child{font-weight:600;color:var(--teal);width:32%;}
+
+  /* ===== IMAGE-CHOICE QUIZ ===== */
+  .iq-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .iq-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:1rem;font-size:1.02rem;}
+  .iq-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem;}
+  .iq-opt{
+    background:#fff;border:1px solid rgba(38,33,28,.25);border-radius:5px;padding:.9rem .5rem;
+    text-align:center;cursor:pointer;transition:.15s;
+  }
+  .iq-opt:hover{border-color:var(--gold);}
+  .iq-opt svg{margin:0 auto .5rem;}
+  .iq-opt .iq-label{font-size:.75rem;font-weight:600;}
+  .iq-opt.correct{background:var(--teal-light);border-color:var(--ok);}
+  .iq-opt.incorrect{background:var(--bad-light);border-color:var(--bad);}
+  .iq-feedback{font-size:.85rem;font-style:italic;margin-top:.8rem;min-height:1.1rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+
+  @media(max-width:560px){.carousel-top{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 02 · Tema 1</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 02 · Técnicas y Tipos de Servicio</div>
+  <h1 class="title">Tipos de Servicio en un Restaurante</h1>
+  <p class="subtitle">Seis estilos, seis formas distintas de llevar el platillo hasta la mesa</p>
+</header>
+
+<main>
+
+  <p class="lead">El "tipo de servicio" define cómo llega el alimento del plato a la mesa del comensal:
+  quién lo porciona, con qué herramientas y con qué nivel de espectáculo. La elección no es solo
+  estética — determina cuánto personal se necesita, qué tan rápido rota una mesa y cuánto cuesta operar
+  el restaurante.</p>
+
+  <h2 class="section-title"><span class="num">6.1</span> Los seis estilos de servicio</h2>
+  <p class="hint">Usa las flechas para recorrer cada estilo.</p>
+
+  <div class="carousel">
+    <div class="carousel-top">
+      <button class="car-arrow" id="car-prev">‹</button>
+      <div class="car-slide" id="car-slide"></div>
+      <button class="car-arrow" id="car-next">›</button>
+    </div>
+    <div class="car-dots" id="car-dots"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">6.2</span> Compara dos estilos</h2>
+  <p>Elige dos tipos de servicio y compáralos lado a lado:</p>
+  <div class="compare-tool">
+    <div class="compare-selects">
+      <select id="sel-a"></select>
+      <select id="sel-b"></select>
+    </div>
+    <table class="compare-table">
+      <thead><tr><th>Criterio</th><th id="th-a"></th><th id="th-b"></th></tr></thead>
+      <tbody id="compare-body"></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title"><span class="num">6.3</span> Montaje y protocolo de servicio</h2>
+  <p>Sin importar el estilo elegido, todo servicio sigue un <span class="term" data-term="protocolo">protocolo</span>
+  general de apertura y cierre. Antes del servicio se realiza el <span class="term" data-term="mise">mise en place</span>
+  de sala: revisión de montaje, temperatura de bebidas y coordinación con cocina. Durante el servicio en
+  estilos como el <span class="term" data-term="gueridon">gueridón</span>, el mesero puede necesitar
+  <span class="term" data-term="flambear">flambear</span> o <span class="term" data-term="trinchar">trinchar</span>
+  frente al comensal, lo cual exige entrenamiento adicional de seguridad con fuego y cuchillos largos.</p>
+
+  <div class="term-pop" data-pop="protocolo">Conjunto de reglas y pasos estandarizados que todo el
+  equipo de servicio sigue, para que la experiencia del comensal sea consistente sin importar quién lo atienda.</div>
+  <div class="term-pop" data-pop="mise">Expresión francesa que significa "puesto en su lugar": la
+  preparación de todo el equipo antes de abrir el servicio.</div>
+  <div class="term-pop" data-pop="gueridon">Carrito auxiliar de servicio usado para preparar, trinchar
+  o flambear platillos justo frente a la mesa del comensal.</div>
+  <div class="term-pop" data-pop="flambear">Técnica de finalizar un platillo prendiendo fuego a un
+  licor añadido en el último momento, generando un efecto visual y de sabor.</div>
+  <div class="term-pop" data-pop="trinchar">Cortar y porcionar una pieza completa de carne, ave o
+  pescado frente al comensal antes de servirla en el plato.</div>
+
+  <h2 class="section-title"><span class="num">6.4</span> Autoevaluación</h2>
+  <p class="hint">Elige el estilo de servicio correcto para cada descripción.</p>
+
+  <div class="iq-box">
+    <div class="iq-q">1. "El mesero presenta la bandeja y el comensal se sirve con pinzas."</div>
+    <div class="iq-opts" data-answer="frances"></div>
+    <div class="iq-feedback"></div>
+  </div>
+  <div class="iq-box">
+    <div class="iq-q">2. "El platillo llega ya montado desde cocina, listo para colocarse en la mesa."</div>
+    <div class="iq-opts" data-answer="americano"></div>
+    <div class="iq-feedback"></div>
+  </div>
+  <div class="iq-box">
+    <div class="iq-q">3. "Se prepara o flambea un platillo frente al comensal usando un carrito."</div>
+    <div class="iq-opts" data-answer="gueridon"></div>
+    <div class="iq-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u1-normatividad-servicio.html">← Anterior: Unidad 01</a>
+  <a href="index.html">Índice</a>
+  <a href="u2-tecnicas-de-servicio.html">Siguiente: Técnicas de servicio →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 02 · Tema: Tipos de servicio en un restaurante</footer>
+
+<script>
+function svgEl(inner, vb="0 0 80 80", size=64){
+  return `<svg viewBox="${vb}" width="${size}" height="${size}" fill="none" stroke="#5C1A2E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+}
+const iFrances = svgEl(`<ellipse cx="40" cy="46" rx="30" ry="9"/><ellipse cx="40" cy="43" rx="22" ry="6" opacity=".5"/><line x1="10" y1="46" x2="4" y2="34"/><line x1="70" y1="46" x2="76" y2="34"/>`);
+const iIngles = svgEl(`<rect x="14" y="46" width="52" height="8" rx="1"/><line x1="20" y1="54" x2="20" y2="68"/><line x1="60" y1="54" x2="60" y2="68"/><ellipse cx="40" cy="38" rx="18" ry="7"/><path d="M22 38 Q40 20 58 38"/>`);
+const iAmericano = svgEl(`<circle cx="40" cy="42" r="26"/><circle cx="40" cy="42" r="17" opacity=".5"/><circle cx="34" cy="38" r="4"/><circle cx="46" cy="46" r="5"/><circle cx="42" cy="32" r="3"/>`);
+const iGueridon = svgEl(`<rect x="16" y="24" width="48" height="24" rx="2"/><circle cx="24" cy="58" r="7"/><circle cx="56" cy="58" r="7"/><path d="M40 24 Q34 12 40 6 Q46 12 40 24" opacity=".7"/>`);
+const iRuso = svgEl(`<ellipse cx="40" cy="44" rx="32" ry="12"/><ellipse cx="40" cy="44" rx="22" ry="7" opacity=".5"/><ellipse cx="40" cy="44" rx="10" ry="3" opacity=".4"/>`);
+const iRoom = svgEl(`<rect x="12" y="42" width="56" height="6" rx="2"/><path d="M22 42 Q22 24 40 24 Q58 24 58 42" /><circle cx="63" cy="20" r="4"/><line x1="63" y1="24" x2="63" y2="14"/>`);
+
+const styles = [
+  {id:"frances", name:"Servicio Francés", origin:"Origen: alta cocina francesa clásica", icon:iFrances,
+   desc:"El mesero presenta la bandeja al comensal, quien se sirve a sí mismo con pinzas, o bien el mesero porciona desde la bandeja directamente al plato por la izquierda.",
+   when:"Se usa en restaurantes de alta cocina y eventos exclusivos, donde el tiempo y el espectáculo son parte de la experiencia.",
+   formalidad:"Alta", personal:"Mucho (mesero muy entrenado)", velocidad:"Lenta", costo:"Alto",
+   uso:"Restaurantes de alta cocina, cenas exclusivas"},
+  {id:"ingles", name:"Servicio Inglés", origin:"Origen: banquetes familiares británicos", icon:iIngles,
+   desc:"El anfitrión o el mesero porciona los alimentos desde una fuente central o un trinchero, y reparte los platos ya servidos a los comensales.",
+   when:"Frecuente en comidas familiares formales y banquetes tradicionales con un fuerte componente de anfitrión.",
+   formalidad:"Alta", personal:"Medio-alto", velocidad:"Media", costo:"Medio-alto",
+   uso:"Comidas familiares formales, banquetes tradicionales"},
+  {id:"americano", name:"Servicio Americano o Emplatado", origin:"Origen: restaurantes de alto volumen, s. XX", icon:iAmericano,
+   desc:"El platillo llega desde cocina ya montado y listo; el mesero únicamente lo coloca en la mesa frente al comensal.",
+   when:"Es el más común en restaurantes de uso diario por su rapidez y bajo costo operativo.",
+   formalidad:"Baja-media", personal:"Poco", velocidad:"Rápida", costo:"Bajo",
+   uso:"Restaurantes de alto volumen y consumo diario"},
+  {id:"gueridon", name:"Servicio de Gueridón", origin:"Origen: restaurantes franceses de lujo", icon:iGueridon,
+   desc:"Un platillo se termina, trincha o flambea frente al comensal sobre un carrito auxiliar llamado gueridón.",
+   when:"Reservado para platillos de alta gama que requieren espectáculo visual, como crepas suzette o carnes trinchadas.",
+   formalidad:"Alta", personal:"Mucho (entrenamiento especializado)", velocidad:"Lenta", costo:"Alto",
+   uso:"Platillos flambeados, trinchados o de autor"},
+  {id:"ruso", name:"Servicio Ruso", origin:"Origen: cortes imperiales rusas, s. XIX", icon:iRuso,
+   desc:"Los alimentos se presentan en una fuente grande y decorada; el mesero los porciona directamente en el plato del comensal desde esa fuente.",
+   when:"Usado en banquetes y eventos con menú fijo, donde se busca elegancia sin la lentitud del servicio francés completo.",
+   formalidad:"Alta", personal:"Medio", velocidad:"Media", costo:"Medio-alto",
+   uso:"Banquetes y eventos con menú preestablecido"},
+  {id:"room", name:"Room Service", origin:"Origen: hotelería moderna", icon:iRoom,
+   desc:"Servicio de alimentos y bebidas entregado directamente en la habitación del huésped, con montaje portátil en charola o mesa rodante.",
+   when:"Exclusivo de hoteles; incluye protocolos propios de tiempos de entrega, tocado de puerta y cobro a la cuenta de habitación.",
+   formalidad:"Media", personal:"Medio", velocidad:"Media (depende del traslado)", costo:"Medio",
+   uso:"Entrega de alimentos y bebidas en habitaciones de hotel"}
+];
+
+// Carousel
+let carIndex = 0;
+const carSlide = document.getElementById('car-slide');
+const carDots = document.getElementById('car-dots');
+function renderCarousel(){
+  const s = styles[carIndex];
+  carSlide.innerHTML = `<div class="car-icon">${s.icon}</div>
+    <div class="car-origin">${s.origin}</div>
+    <div class="car-name">${s.name}</div>
+    <div class="car-desc">${s.desc}</div>
+    <div class="car-when">${s.when}</div>`;
+  carDots.innerHTML = '';
+  styles.forEach((st,i)=>{
+    const dot = document.createElement('button');
+    dot.className = 'car-dot' + (i===carIndex?' active':'');
+    dot.addEventListener('click', ()=>{ carIndex=i; renderCarousel(); });
+    carDots.appendChild(dot);
+  });
+}
+document.getElementById('car-prev').addEventListener('click', ()=>{ carIndex=(carIndex-1+styles.length)%styles.length; renderCarousel(); });
+document.getElementById('car-next').addEventListener('click', ()=>{ carIndex=(carIndex+1)%styles.length; renderCarousel(); });
+renderCarousel();
+
+// Comparison tool
+const selA = document.getElementById('sel-a');
+const selB = document.getElementById('sel-b');
+styles.forEach((s,i)=>{
+  selA.innerHTML += `<option value="${s.id}" ${i===0?'selected':''}>${s.name}</option>`;
+  selB.innerHTML += `<option value="${s.id}" ${i===2?'selected':''}>${s.name}</option>`;
+});
+function renderCompare(){
+  const a = styles.find(s=>s.id===selA.value);
+  const b = styles.find(s=>s.id===selB.value);
+  document.getElementById('th-a').textContent = a.name;
+  document.getElementById('th-b').textContent = b.name;
+  const rows = [
+    ["Nivel de formalidad","formalidad"],["Personal requerido","personal"],
+    ["Velocidad de servicio","velocidad"],["Costo de implementación","costo"],["Uso típico","uso"]
+  ];
+  document.getElementById('compare-body').innerHTML = rows.map(r=>
+    `<tr><td>${r[0]}</td><td>${a[r[1]]}</td><td>${b[r[1]]}</td></tr>`
+  ).join('');
+}
+selA.addEventListener('change', renderCompare);
+selB.addEventListener('change', renderCompare);
+renderCompare();
+
+// Term popovers
+document.querySelectorAll('.term').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    const pop = document.querySelector('.term-pop[data-pop="'+t.dataset.term+'"]');
+    document.querySelectorAll('.term-pop').forEach(p=>{ if(p!==pop) p.classList.remove('open'); });
+    pop.classList.toggle('open');
+  });
+});
+
+// Image-choice quiz
+const quizIcons = [
+  {id:"frances", icon:iFrances, label:"Francés"},
+  {id:"americano", icon:iAmericano, label:"Americano"},
+  {id:"gueridon", icon:iGueridon, label:"Gueridón"},
+  {id:"ruso", icon:iRuso, label:"Ruso"}
+];
+document.querySelectorAll('.iq-opts').forEach(box=>{
+  const correct = box.dataset.answer;
+  const feedback = box.nextElementSibling;
+  const shuffledIcons = [...quizIcons].sort(()=>Math.random()-0.5);
+  shuffledIcons.forEach(q=>{
+    const opt = document.createElement('div');
+    opt.className = 'iq-opt';
+    opt.innerHTML = q.icon + `<div class="iq-label">${q.label}</div>`;
+    opt.addEventListener('click', ()=>{
+      if(box.dataset.answered) return;
+      box.dataset.answered = "1";
+      const allOpts = box.querySelectorAll('.iq-opt');
+      if(q.id === correct){
+        opt.classList.add('correct');
+        feedback.textContent = '¡Correcto!';
+        feedback.style.color = '#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        feedback.textContent = 'No es correcto — la respuesta correcta se marca en verde.';
+        feedback.style.color = '#8C3B3B';
+        allOpts.forEach(o=>{
+          if(o.textContent.includes(quizIcons.find(x=>x.id===correct).label)) o.classList.add('correct');
+        });
+      }
+    });
+    box.appendChild(opt);
+  });
+});
+</script>
+
+</body>
+</html>

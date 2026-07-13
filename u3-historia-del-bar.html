@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia del bar · Unidad 3 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2.1rem,5vw,3.3rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:840px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.55rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+  .pullquote{
+    font-family:'Fraunces',serif;font-style:italic;font-size:1.2rem;color:var(--bordeaux);
+    text-align:center;max-width:46ch;margin:1.6rem auto;line-height:1.5;
+  }
+
+  /* ===== ERA TIMELINE SLIDER ===== */
+  .timeline-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem 1.6rem;margin:1.4rem 0 1.8rem;}
+  .tl-track-wrap{position:relative;margin:0 0 1.6rem;}
+  .tl-track-wrap input[type=range]{
+    width:100%;accent-color:var(--bordeaux);height:6px;
+  }
+  .tl-ticks{display:flex;justify-content:space-between;margin-top:.4rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--teal);opacity:.8;}
+  .tl-ticks span{flex:1;text-align:center;}
+  .tl-content{text-align:center;}
+  .tl-era-year{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);background:var(--bordeaux);display:inline-block;padding:.3rem .7rem;border-radius:3px;margin-bottom:.8rem;}
+  .tl-era-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.35rem;margin-bottom:.7rem;}
+  .tl-era-desc{font-size:.95rem;max-width:58ch;margin:0 auto;opacity:.9;}
+
+  /* ===== ZIGZAG TIMELINE ===== */
+  .zigzag{margin:1.6rem 0;}
+  .zz-item{
+    display:flex;gap:1.2rem;margin-bottom:1.6rem;align-items:flex-start;
+  }
+  .zz-item.reverse{flex-direction:row-reverse;text-align:right;}
+  .zz-marker{
+    flex-shrink:0;width:14px;height:14px;border-radius:50%;background:var(--gold);
+    margin-top:.4rem;position:relative;
+  }
+  .zz-body{
+    background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;
+    padding:1.1rem 1.3rem;flex:1;
+  }
+  .zz-name{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);font-size:1.05rem;margin-bottom:.3rem;}
+  .zz-tag{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--teal);margin-bottom:.5rem;display:block;}
+  .zz-short{font-size:.88rem;margin-bottom:.5rem;}
+  .zz-more{display:none;font-size:.86rem;opacity:.85;margin-top:.5rem;padding-top:.5rem;border-top:1px dotted rgba(38,33,28,.2);}
+  .zz-more.open{display:block;}
+  .zz-toggle{
+    font-family:'Space Mono',monospace;font-size:.72rem;color:var(--bordeaux);background:none;border:none;
+    cursor:pointer;padding:0;text-decoration:underline;
+  }
+
+  /* ===== TRIVIA GENERATOR ===== */
+  .trivia-box{
+    background:var(--bordeaux);color:var(--linen-light);border-radius:8px;padding:1.8rem 1.8rem;
+    text-align:center;margin:1.6rem 0;
+  }
+  .trivia-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+  .trivia-text{font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;min-height:3.4rem;display:flex;align-items:center;justify-content:center;max-width:52ch;margin:0 auto;}
+  .trivia-btn{
+    font-family:'Space Mono',monospace;font-size:.78rem;background:var(--gold);color:var(--bordeaux-dark);
+    border:none;padding:.6rem 1.2rem;border-radius:20px;cursor:pointer;margin-top:1.2rem;font-weight:700;
+  }
+
+  /* ===== QUIZ WITH HINT ===== */
+  .qh-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.5rem 1.6rem;margin:1.2rem 0;}
+  .qh-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.6rem;font-size:1.02rem;}
+  .qh-hint-btn{
+    font-family:'Space Mono',monospace;font-size:.7rem;background:none;border:1px dashed var(--gold);color:var(--teal);
+    padding:.35rem .7rem;border-radius:20px;cursor:pointer;margin-bottom:.9rem;
+  }
+  .qh-hint-text{display:none;font-size:.85rem;font-style:italic;color:var(--teal);background:var(--teal-light);padding:.6rem .8rem;border-radius:4px;margin-bottom:.9rem;}
+  .qh-hint-text.open{display:block;}
+  .qh-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.5rem;}
+  .qh-opt{
+    text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);padding:.7rem .9rem;border-radius:3px;
+    cursor:pointer;font-family:'Work Sans',sans-serif;font-size:.92rem;transition:.15s;
+  }
+  .qh-opt:hover{border-color:var(--bordeaux);}
+  .qh-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .qh-opt.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .qh-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+
+  @media(max-width:600px){
+    .zz-item, .zz-item.reverse{flex-direction:row;text-align:left;}
+    .tl-ticks span{font-size:.55rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 03 · El Bar · Tema 1</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 03 · El Bar</div>
+  <h1 class="title">Historia del Bar</h1>
+  <p class="subtitle">De las casas de cerveza de Mesopotamia a la coctelería de autor</p>
+</header>
+
+<main>
+
+  <p class="lead">El bar, tal como lo conocemos hoy, es el resultado de miles de años de evolución social:
+  desde los primeros lugares donde se compartía cerveza en la antigüedad, hasta los bares de autor que
+  hoy reinterpretan la coctelería con técnicas de laboratorio. Conocer esta historia ayuda a entender por
+  qué el bar sigue siendo, ante todo, un espacio de encuentro.</p>
+
+  <p class="pullquote">"La palabra bar viene de la barra de madera que separaba al tabernero de sus
+  clientes — tan práctica como simbólica."</p>
+
+  <h2 class="section-title"><span class="num">8.1</span> Línea del tiempo</h2>
+  <p class="hint">Arrastra el control para viajar por las distintas épocas del bar.</p>
+
+  <div class="timeline-tool">
+    <div class="tl-track-wrap">
+      <input type="range" id="tl-range" min="0" max="6" value="0" step="1">
+      <div class="tl-ticks">
+        <span>3000 a.C.</span><span>s. V a.C.</span><span>Edad Media</span><span>s. XIX</span><span>1920s</span><span>1933–1960</span><span>Hoy</span>
+      </div>
+    </div>
+    <div class="tl-content" id="tl-content"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">8.2</span> Lugares y personajes que hicieron historia</h2>
+  <p class="hint">Toca "leer más" para conocer el detalle de cada uno.</p>
+
+  <div class="zigzag" id="zigzag"></div>
+
+  <h2 class="section-title"><span class="num">8.3</span> ¿Sabías que...?</h2>
+  <div class="trivia-box">
+    <div class="trivia-label">Dato curioso</div>
+    <div class="trivia-text" id="trivia-text"></div>
+    <button class="trivia-btn" id="trivia-btn">Otro dato →</button>
+  </div>
+
+  <h2 class="section-title"><span class="num">8.4</span> Autoevaluación</h2>
+
+  <div class="qh-box">
+    <div class="qh-q">1. ¿De dónde viene el nombre "bar"?</div>
+    <button class="qh-hint-btn">💡 Ver pista</button>
+    <div class="qh-hint-text">Piensa en un objeto físico de madera presente en cualquier bar.</div>
+    <div class="qh-opts" data-answer="1">
+      <button class="qh-opt">De la palabra francesa "barrique" (barril)</button>
+      <button class="qh-opt">De la barra de madera que separaba al tabernero de los clientes</button>
+      <button class="qh-opt">De un apellido de un famoso cantinero del s. XIX</button>
+    </div>
+    <div class="qh-feedback"></div>
+  </div>
+
+  <div class="qh-box">
+    <div class="qh-q">2. ¿Qué evento histórico impulsó la creación de los speakeasies?</div>
+    <button class="qh-hint-btn">💡 Ver pista</button>
+    <div class="qh-hint-text">Ocurrió en Estados Unidos entre 1920 y 1933.</div>
+    <div class="qh-opts" data-answer="0">
+      <button class="qh-opt">La Ley Seca (prohibición del alcohol)</button>
+      <button class="qh-opt">La Segunda Guerra Mundial</button>
+      <button class="qh-opt">La Gran Depresión de 1929</button>
+    </div>
+    <div class="qh-feedback"></div>
+  </div>
+
+  <div class="qh-box">
+    <div class="qh-q">3. ¿A quién se le considera "el padre de la mixología moderna"?</div>
+    <button class="qh-hint-btn">💡 Ver pista</button>
+    <div class="qh-hint-text">Escribió el primer libro de recetas de cocteles en 1862.</div>
+    <div class="qh-opts" data-answer="2">
+      <button class="qh-opt">Ernest Hemingway</button>
+      <button class="qh-opt">Harry MacElhone</button>
+      <button class="qh-opt">Jerry Thomas</button>
+    </div>
+    <div class="qh-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u2-tecnicas-de-servicio.html">← Anterior: Unidad 02</a>
+  <a href="index.html">Índice</a>
+  <a href="u3-tipos-de-bar.html">Siguiente: Tipos de bar →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 03 · Tema: Historia del bar</footer>
+
+<script>
+  // Era timeline
+  const eras = [
+    {year:"~3000 a.C.", name:"Mesopotamia y Egipto", desc:"Las primeras 'casas de cerveza' surgen junto a templos y mercados. La cerveza es una bebida cotidiana y ritual, y en muchos casos su elaboración y venta estaba a cargo de mujeres."},
+    {year:"s. V a.C. – V d.C.", name:"Grecia y Roma: las tabernae", desc:"Los griegos socializan el vino en los simposios, mientras que en Roma las tabernae ofrecen vino mezclado con agua a viajeros y ciudadanos junto a los caminos y plazas."},
+    {year:"Edad Media", name:"Posadas y tabernas", desc:"Las posadas de camino ofrecen alojamiento, comida y bebida a viajeros, mientras que las tabernas urbanas se convierten en centros de vida social y de reunión de gremios."},
+    {year:"s. XIX", name:"Los saloons del Viejo Oeste", desc:"En los pueblos fronterizos de Estados Unidos, el saloon es punto de encuentro obligado, con su característico mostrador largo de madera — de ahí proviene el nombre 'bar'."},
+    {year:"1920–1933", name:"Ley Seca y speakeasies", desc:"La prohibición del alcohol en EE.UU. impulsa bares clandestinos escondidos tras negocios comunes. Nace la necesidad de disimular licores de baja calidad, lo que impulsa la creatividad de la coctelería."},
+    {year:"1933–1960", name:"Renacimiento de la coctelería clásica", desc:"Al terminar la prohibición, resurgen los bares legales y florecen los bares de hotel de lujo, además de la moda de la coctelería tiki inspirada en el Pacífico."},
+    {year:"Actualidad", name:"Coctelería moderna y de autor", desc:"El movimiento de 'craft cocktails' recupera técnicas clásicas junto con mixología de precisión, ingredientes de temporada y una fuerte identidad de autor en cada barra."}
+  ];
+  const tlRange = document.getElementById('tl-range');
+  const tlContent = document.getElementById('tl-content');
+  function renderEra(){
+    const e = eras[tlRange.value];
+    tlContent.innerHTML = `<div class="tl-era-year">${e.year}</div>
+      <div class="tl-era-name">${e.name}</div>
+      <div class="tl-era-desc">${e.desc}</div>`;
+  }
+  tlRange.addEventListener('input', renderEra);
+  renderEra();
+
+  // Zigzag personalities
+  const figures = [
+    {n:"Jerry Thomas", tag:"EE.UU. · s. XIX", s:"Considerado el 'padre de la mixología moderna'.", m:"En 1862 publicó 'How to Mix Drinks', el primer libro dedicado exclusivamente a recetas de cocteles, sentando las bases de la coctelería como oficio."},
+    {n:"Harry's New York Bar", tag:"París · 1911", s:"Uno de los bares más influyentes de Europa.", m:"Fundado por un jockey estadounidense, se convirtió en punto de reunión de expatriados y, según la tradición del propio bar, cuna de varios cocteles clásicos."},
+    {n:"El Floridita", tag:"La Habana, Cuba", s:"Famoso por el daiquiri y su vínculo con Ernest Hemingway.", m:"Este bar cubano popularizó el daiquiri frappé y se volvió parada obligada de escritores y viajeros durante buena parte del siglo XX."},
+    {n:"American Bar del Savoy", tag:"Londres", s:"Referencia histórica de la coctelería de hotel británica.", m:"Ha sido punto de referencia de la coctelería europea desde principios del siglo XX, influenciando generaciones de bartenders."}
+  ];
+  const zzEl = document.getElementById('zigzag');
+  figures.forEach((f,i)=>{
+    const item = document.createElement('div');
+    item.className = 'zz-item' + (i%2===1 ? ' reverse' : '');
+    item.innerHTML = `<div class="zz-marker"></div>
+      <div class="zz-body">
+        <span class="zz-tag">${f.tag}</span>
+        <div class="zz-name">${f.n}</div>
+        <div class="zz-short">${f.s}</div>
+        <div class="zz-more">${f.m}</div>
+        <button class="zz-toggle">leer más ›</button>
+      </div>`;
+    zzEl.appendChild(item);
+  });
+  document.querySelectorAll('.zz-toggle').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const more = btn.previousElementSibling;
+      more.classList.toggle('open');
+      btn.textContent = more.classList.contains('open') ? 'leer menos ‹' : 'leer más ›';
+    });
+  });
+
+  // Trivia generator
+  const trivia = [
+    "La palabra 'bar' viene de la barra de madera que separaba al tabernero de los clientes, tanto para servir como para evitar robos.",
+    "Durante la Ley Seca, muchos speakeasies se escondían detrás de negocios comunes, como tiendas de lavandería o barberías.",
+    "El término 'cóctel' apareció impreso por primera vez en un periódico de Nueva York en 1806.",
+    "Jerry Thomas es considerado el padre de la mixología moderna gracias a su libro 'How to Mix Drinks' de 1862.",
+    "El daiquiri nació en Cuba a finales del siglo XIX, nombrado así por una mina cercana a Santiago de Cuba.",
+    "En los saloons del Viejo Oeste, el mostrador de madera no solo servía bebidas: también funcionaba como línea de defensa en caso de pelea."
+  ];
+  let triviaIndex = 0;
+  const triviaText = document.getElementById('trivia-text');
+  triviaText.textContent = trivia[0];
+  document.getElementById('trivia-btn').addEventListener('click', ()=>{
+    triviaIndex = (triviaIndex+1) % trivia.length;
+    triviaText.textContent = trivia[triviaIndex];
+  });
+
+  // Hint buttons
+  document.querySelectorAll('.qh-hint-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const hint = btn.nextElementSibling;
+      hint.classList.toggle('open');
+    });
+  });
+
+  // Quiz
+  document.querySelectorAll('.qh-opts').forEach(group=>{
+    const correctIndex = parseInt(group.dataset.answer,10);
+    const opts = group.querySelectorAll('.qh-opt');
+    const feedback = group.nextElementSibling;
+    opts.forEach((opt,i)=>{
+      opt.addEventListener('click', ()=>{
+        if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+        opts.forEach(o=>o.disabled=true);
+        if(i===correctIndex){
+          opt.classList.add('correct');
+          feedback.textContent='¡Correcto!';
+          feedback.style.color='#3F5D58';
+        }else{
+          opt.classList.add('incorrect');
+          opts[correctIndex].classList.add('correct');
+          feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+          feedback.style.color='#8C3B3B';
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

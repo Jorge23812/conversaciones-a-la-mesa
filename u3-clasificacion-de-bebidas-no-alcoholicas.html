@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clasificación de bebidas no alcohólicas · Unidad 3 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.8vw,3.2rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:860px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== BUBBLE RATING ===== */
+  .bubble-list{margin:1.3rem 0 1.8rem;}
+  .bubble-row{display:flex;align-items:center;gap:1rem;margin-bottom:.9rem;flex-wrap:wrap;}
+  .bubble-name{width:170px;flex-shrink:0;font-size:.9rem;font-weight:600;}
+  .bubble-dots{display:flex;gap:.3rem;}
+  .bdot{width:14px;height:14px;border-radius:50%;border:2px solid var(--teal);}
+  .bdot.filled{background:var(--teal);}
+  .bubble-note{font-size:.8rem;opacity:.7;flex:1;min-width:180px;}
+
+  /* ===== MIXER GRID ===== */
+  .mix-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:1.3rem 0 1.8rem;}
+  .mix-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-top:3px solid var(--gold);border-radius:5px;padding:1.1rem 1.2rem;}
+  .mix-card .mn{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);margin-bottom:.35rem;font-size:1rem;}
+  .mix-card p{font-size:.86rem;margin:0;opacity:.85;}
+
+  /* ===== DRAG REVEAL SLIDER ===== */
+  .reveal-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.6rem;margin:1.4rem 0 1.5rem;}
+  .reveal-frame{position:relative;height:180px;border-radius:6px;overflow:hidden;border:1px solid rgba(38,33,28,.15);}
+  .reveal-panel{position:absolute;inset:0;padding:1.2rem 1.3rem;display:flex;flex-direction:column;justify-content:center;}
+  .reveal-panel.nectar{background:var(--bordeaux);color:var(--linen-light);}
+  .reveal-panel.juice{background:var(--teal);color:#fff;overflow:hidden;}
+  .reveal-panel .rp-label{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;opacity:.85;margin-bottom:.4rem;}
+  .reveal-panel .rp-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin-bottom:.5rem;}
+  .reveal-panel p{font-size:.85rem;margin:0;opacity:.95;}
+  .reveal-range{width:100%;margin-top:1rem;accent-color:var(--bordeaux);}
+  .reveal-hint2{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--teal);text-align:center;margin-top:.5rem;}
+
+  /* ===== DONUT CHARTS ===== */
+  .donut-wrap{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin:1.6rem 0 1.8rem;}
+  .donut-item{text-align:center;}
+  .donut{width:120px;height:120px;border-radius:50%;margin:0 auto .8rem;}
+  .donut-label{font-family:'Fraunces',serif;font-weight:600;font-size:.95rem;color:var(--bordeaux);}
+  .donut-sub{font-family:'Space Mono',monospace;font-size:.68rem;opacity:.7;max-width:150px;margin:.3rem auto 0;}
+
+  /* ===== QUIZ ===== */
+  .quiz-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .quiz-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.9rem;font-size:1.02rem;}
+  .quiz-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.6rem;}
+  .quiz-opt{text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);padding:.7rem .9rem;border-radius:3px;cursor:pointer;font-size:.92rem;transition:.15s;}
+  .quiz-opt:hover{border-color:var(--bordeaux);}
+  .quiz-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .quiz-opt.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .quiz-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .unit-close{
+    background:var(--bordeaux);color:var(--linen-light);border-radius:8px;padding:1.8rem;text-align:center;margin:2.4rem 0 1rem;
+  }
+  .unit-close .uc-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+  .unit-close h3{font-family:'Fraunces',serif;font-size:1.3rem;margin-bottom:.6rem;}
+  .unit-close p{font-size:.9rem;opacity:.9;margin-bottom:0;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 03 · El Bar · Último tema</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 03 · El Bar</div>
+  <h1 class="title">Clasificación de Bebidas No Alcohólicas</h1>
+  <p class="subtitle">Agua, mezcladores, jugos, néctares y gaseosas — la otra mitad de la barra</p>
+</header>
+
+<main>
+
+  <p class="lead">No todo lo que sale de una barra lleva alcohol. El agua, los mezcladores, los jugos y
+  las gaseosas son igual de técnicos: cada uno tiene un rol específico, ya sea como protagonista de una
+  bebida o como acompañante de un coctel.</p>
+
+  <h2 class="section-title"><span class="num">11.1</span> Agua</h2>
+  <p>El agua es la bebida más pedida en cualquier servicio, y también tiene su propia clasificación:</p>
+  <div class="bubble-list" id="bubble-list"></div>
+
+  <h2 class="section-title"><span class="num">11.2</span> Mezcladores</h2>
+  <p>Son bebidas no alcohólicas usadas para diluir, complementar o balancear un destilado dentro de un
+  coctel:</p>
+  <div class="mix-grid" id="mix-grid"></div>
+
+  <h2 class="section-title"><span class="num">11.3</span> Jugos y néctares</h2>
+  <p>Aunque se usan de forma similar en barra, no son lo mismo. Arrastra el control para comparar:</p>
+
+  <div class="reveal-tool">
+    <div class="reveal-frame">
+      <div class="reveal-panel nectar">
+        <div class="rp-label">Néctar</div>
+        <div class="rp-name">Fruta + agua + azúcar</div>
+        <p>Se elabora con pulpa o jugo de fruta diluido con agua y azúcar añadida. Textura más ligera y
+        mayor rendimiento por costo. Ej: néctar de durazno o guayaba.</p>
+      </div>
+      <div class="reveal-panel juice" id="juice-panel" style="width:50%;">
+        <div class="rp-label">Jugo</div>
+        <div class="rp-name">100% fruta</div>
+        <p>Extraído directamente de la fruta, sin agua ni azúcar añadida. Sabor intenso y textura más
+        espesa. Ej: jugo de naranja recién exprimido.</p>
+      </div>
+    </div>
+    <input type="range" class="reveal-range" id="reveal-range" min="0" max="100" value="50">
+    <div class="reveal-hint2">← arrastra para comparar jugo y néctar →</div>
+  </div>
+
+  <div class="donut-wrap">
+    <div class="donut-item">
+      <div class="donut" style="background:conic-gradient(var(--teal) 0% 100%);"></div>
+      <div class="donut-label">Jugo</div>
+      <div class="donut-sub">100% fruta, sin aditivos</div>
+    </div>
+    <div class="donut-item">
+      <div class="donut" style="background:conic-gradient(var(--teal) 0% 40%, var(--gold) 40% 100%);"></div>
+      <div class="donut-label">Néctar</div>
+      <div class="donut-sub">~40% fruta / 60% agua y azúcar (ejemplo ilustrativo, varía por producto)</div>
+    </div>
+  </div>
+
+  <h2 class="section-title"><span class="num">11.4</span> Gaseosas</h2>
+  <p>Las gaseosas o refrescos combinan <strong>agua carbonatada, saborizantes y azúcar o edulcorante</strong>,
+  y en algunos casos cafeína. Se clasifican principalmente en tres grupos: de cola, de sabor cítrico
+  (lima-limón) y de sabor frutal.</p>
+  <p>Reglas de servicio: se sirven siempre <strong>frías, con hielo</strong> y, si el cliente lo desea,
+  con una rodaja de limón. Nunca se agita la botella antes de abrirla, y se evita dejarlas destapadas
+  mucho tiempo para no perder la carbonatación.</p>
+
+  <h2 class="section-title"><span class="num">11.5</span> Autoevaluación</h2>
+
+  <div class="quiz-box">
+    <div class="quiz-q">1. ¿Cuál es la diferencia principal entre un jugo y un néctar?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Son exactamente lo mismo, solo cambia el nombre</button>
+      <button class="quiz-opt">El jugo es 100% fruta; el néctar lleva agua y azúcar añadida</button>
+      <button class="quiz-opt">El néctar siempre tiene alcohol y el jugo no</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">2. ¿Qué es un "mezclador" en coctelería?</div>
+    <div class="quiz-opts" data-answer="2">
+      <button class="quiz-opt">Un tipo de licor fortificado</button>
+      <button class="quiz-opt">El nombre del bartender que combina bebidas</button>
+      <button class="quiz-opt">Una bebida no alcohólica usada para diluir o combinar con un licor</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">3. ¿Qué caracteriza al agua tónica?</div>
+    <div class="quiz-opts" data-answer="0">
+      <button class="quiz-opt">Contiene quinina y es la base del gin & tonic</button>
+      <button class="quiz-opt">Es agua de manantial sin ningún aditivo</button>
+      <button class="quiz-opt">Siempre se sirve caliente</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">4. ¿Cómo se debe servir correctamente una gaseosa?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Tibia, para conservar mejor su sabor</button>
+      <button class="quiz-opt">Fría, con hielo y sin agitar la botella antes de abrirla</button>
+      <button class="quiz-opt">Agitada, para intensificar la carbonatación</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+  <div class="unit-close">
+    <div class="uc-label">Unidad 03 completada</div>
+    <h3>El Bar</h3>
+    <p>Historia, tipos de bar, y clasificación de bebidas alcohólicas y no alcohólicas — listo para pasar
+    a la coctelería.</p>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u3-clasificacion-de-bebidas-alcoholicas.html">← Anterior: Bebidas alcohólicas</a>
+  <a href="index.html">Índice</a>
+  <a href="u4-composicion-de-un-coctel.html">Siguiente: Unidad 04 · Coctelería →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 03 · Tema: Clasificación de bebidas no alcohólicas</footer>
+
+<script>
+// Bubble rating
+const bubbleData = [
+  {n:"Agua natural", level:0, note:"Sin gas, servida fría como base de cualquier mesa"},
+  {n:"Agua mineral con gas", level:5, note:"Carbonatación natural o añadida, minerales propios"},
+  {n:"Agua tónica", level:4, note:"Carbonatada, con quinina — base de mezclador"},
+  {n:"Agua saborizada", level:1, note:"Generalmente sin gas, infusionada con frutas o hierbas"}
+];
+const bubbleList = document.getElementById('bubble-list');
+bubbleData.forEach(b=>{
+  const row = document.createElement('div');
+  row.className = 'bubble-row';
+  let dots = '';
+  for(let i=0;i<5;i++){ dots += `<span class="bdot${i<b.level?' filled':''}"></span>`; }
+  row.innerHTML = `<div class="bubble-name">${b.n}</div><div class="bubble-dots">${dots}</div><div class="bubble-note">${b.note}</div>`;
+  bubbleList.appendChild(row);
+});
+
+// Mixers
+const mixers = [
+  {n:"Agua tónica", d:"Carbonatada con quinina; base clásica del gin & tonic."},
+  {n:"Soda / agua mineral", d:"Agua carbonatada neutra, usada para alargar destilados como el whisky."},
+  {n:"Ginger ale", d:"Refresco de jengibre suave, dulce y ligero, usado en highballs."},
+  {n:"Ginger beer", d:"Más picante e intenso que el ginger ale; base del Moscow Mule."},
+  {n:"Jugo de arándano", d:"Aporta acidez y color; base de cocteles como el Cosmopolitan."},
+  {n:"Clamato", d:"Mezcla de jugo de tomate y almeja, típico de cocteles como la Michelada o el Bloody Maria."}
+];
+const mixGrid = document.getElementById('mix-grid');
+mixers.forEach(m=>{
+  const card = document.createElement('div');
+  card.className = 'mix-card';
+  card.innerHTML = `<div class="mn">${m.n}</div><p>${m.d}</p>`;
+  mixGrid.appendChild(card);
+});
+
+// Reveal slider
+const revealRange = document.getElementById('reveal-range');
+const juicePanel = document.getElementById('juice-panel');
+revealRange.addEventListener('input', ()=>{
+  juicePanel.style.width = revealRange.value + '%';
+});
+
+// Quiz
+document.querySelectorAll('.quiz-opts').forEach(group=>{
+  const correctIndex = parseInt(group.dataset.answer,10);
+  const opts = group.querySelectorAll('.quiz-opt');
+  const feedback = group.nextElementSibling;
+  opts.forEach((opt,i)=>{
+    opt.addEventListener('click', ()=>{
+      if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+      opts.forEach(o=>o.disabled=true);
+      if(i===correctIndex){
+        opt.classList.add('correct');
+        feedback.textContent='¡Correcto!';
+        feedback.style.color='#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+        feedback.style.color='#8C3B3B';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

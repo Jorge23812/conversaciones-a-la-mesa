@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clasificación de bebidas alcohólicas · Unidad 3 · Servicio de Alimentos y Bebidas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bordeaux:#5C1A2E; --bordeaux-dark:#3E1020; --gold:#C9A15A;
+    --linen:#EDE6D6; --linen-light:#F7F3E8; --ink:#26211C;
+    --teal:#3F5D58; --teal-light:#E4EDEB; --ok:#3F5D58; --bad:#8C3B3B; --bad-light:#F5E4E4;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--linen);color:var(--ink);font-family:'Work Sans',sans-serif;line-height:1.65;padding-bottom:6rem;}
+  a{color:inherit;}
+  svg{display:block;}
+
+  nav.topbar{
+    background:var(--bordeaux-dark);color:var(--linen-light);padding:.9rem 1.5rem;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem;
+    font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.06em;
+  }
+  nav.topbar a.back{color:var(--gold);text-decoration:none;}
+  nav.topbar a.back:hover{text-decoration:underline;}
+  .crumb{opacity:.7;text-transform:uppercase;}
+
+  header.hero{background:var(--bordeaux);color:var(--linen-light);padding:3.4rem 1.5rem 3rem;text-align:center;position:relative;}
+  header.hero::before{content:"";position:absolute;inset:12px;border:1px solid rgba(201,161,90,0.4);pointer-events:none;}
+  .unit-tag{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  h1.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(2rem,4.8vw,3.2rem);letter-spacing:-.01em;}
+  .subtitle{font-family:'Fraunces',serif;font-style:italic;font-size:1.05rem;color:var(--gold);margin-top:.7rem;}
+
+  main{max-width:860px;margin:0 auto;padding:3rem 1.5rem 1rem;}
+
+  h2.section-title{
+    font-family:'Fraunces',serif;font-weight:600;font-size:1.5rem;color:var(--bordeaux);
+    margin:3.2rem 0 .6rem;display:flex;align-items:center;gap:.7rem;
+  }
+  h2.section-title .num{font-family:'Space Mono',monospace;font-size:.8rem;background:var(--bordeaux);color:var(--gold);padding:.25rem .55rem;border-radius:2px;}
+  p{margin-bottom:1rem;font-size:1rem;}
+  strong{color:var(--bordeaux);}
+  .lead{font-size:1.08rem;border-left:3px solid var(--gold);padding-left:1.1rem;font-style:italic;opacity:.9;margin-bottom:1.5rem;}
+  .hint{font-size:.82rem;font-family:'Space Mono',monospace;color:var(--teal);opacity:.85;margin:-.4rem 0 1.2rem;}
+
+  /* ===== PIPELINE ===== */
+  .pipeline{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem 1.5rem;margin:1.4rem 0 1.8rem;}
+  .pipe-track{display:flex;align-items:flex-start;gap:0;position:relative;overflow-x:auto;padding-bottom:.5rem;}
+  .pipe-node{flex:1;min-width:110px;text-align:center;cursor:pointer;position:relative;padding:0 .3rem;}
+  .pipe-node .pn-circle{
+    width:34px;height:34px;border-radius:50%;background:var(--linen-light);border:2px solid var(--bordeaux);
+    display:flex;align-items:center;justify-content:center;margin:0 auto .5rem;font-family:'Space Mono',monospace;
+    font-size:.8rem;color:var(--bordeaux);transition:.2s;position:relative;z-index:1;
+  }
+  .pipe-node.active .pn-circle{background:var(--bordeaux);color:var(--gold);}
+  .pipe-node:not(:last-child)::after{
+    content:"";position:absolute;top:17px;left:55%;width:90%;height:2px;background:rgba(38,33,28,.25);
+  }
+  .pipe-node .pn-label{font-size:.72rem;font-weight:600;line-height:1.2;}
+  .pipe-detail{
+    background:#fff;border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.2rem 1.4rem;margin-top:1.4rem;
+  }
+  .pipe-detail h4{font-family:'Fraunces',serif;color:var(--bordeaux);margin-bottom:.5rem;font-size:1.05rem;}
+  .pipe-detail p{font-size:.9rem;margin-bottom:.6rem;}
+  .pipe-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .pipe-tag{font-family:'Space Mono',monospace;font-size:.65rem;background:var(--teal-light);color:var(--teal);padding:.25rem .55rem;border-radius:12px;}
+
+  /* ===== ABV GAUGE ===== */
+  .gauge-tool{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.8rem;margin:1.4rem 0 1.8rem;text-align:center;}
+  .gauge-svg-wrap{position:relative;width:220px;height:120px;margin:0 auto;}
+  .needle{
+    position:absolute;bottom:0;left:50%;width:3px;height:90px;background:var(--bordeaux);
+    transform-origin:bottom center;transform:translateX(-50%) rotate(0deg);transition:transform .5s ease;border-radius:2px;
+  }
+  .needle::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:var(--bordeaux);}
+  .gauge-readout{margin-top:1rem;font-family:'Space Mono',monospace;}
+  .gauge-readout .gv{font-size:1.6rem;font-weight:700;color:var(--bordeaux);}
+  .gauge-readout .gn{font-size:.85rem;opacity:.7;}
+  .gauge-btns{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:1.3rem;}
+  .gauge-btn{
+    font-family:'Space Mono',monospace;font-size:.75rem;background:#fff;border:1px solid rgba(38,33,28,.25);
+    padding:.5rem .9rem;border-radius:20px;cursor:pointer;transition:.15s;
+  }
+  .gauge-btn.active{background:var(--bordeaux);color:var(--gold);border-color:var(--bordeaux);}
+
+  /* ===== CATEGORY GRID ===== */
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin:1.4rem 0 1.8rem;}
+  .cat-card{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-top:3px solid var(--teal);border-radius:5px;padding:1.2rem 1.3rem;}
+  .cat-card .cn{font-family:'Fraunces',serif;font-weight:600;color:var(--bordeaux);margin-bottom:.4rem;}
+  .cat-card p{font-size:.87rem;margin-bottom:.5rem;opacity:.85;}
+  .cat-card .cex{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--teal);}
+
+  /* ===== SORTING GAME ===== */
+  .sort-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:8px;padding:1.5rem;margin:1.4rem 0 1.8rem;}
+  .sort-item{border-bottom:1px dotted rgba(38,33,28,.2);padding:.9rem 0;}
+  .sort-item:last-child{border-bottom:none;}
+  .sort-name{font-weight:600;margin-bottom:.5rem;font-size:.95rem;}
+  .sort-btns{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .sort-btn{
+    font-family:'Space Mono',monospace;font-size:.68rem;background:#fff;border:1px solid rgba(38,33,28,.25);
+    padding:.4rem .7rem;border-radius:14px;cursor:pointer;transition:.15s;
+  }
+  .sort-btn:hover{border-color:var(--gold);}
+  .sort-btn.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);}
+  .sort-btn.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .sort-btn:disabled{pointer-events:none;}
+
+  /* ===== QUIZ ===== */
+  .quiz-box{background:var(--linen-light);border:1px solid rgba(38,33,28,.15);border-radius:6px;padding:1.4rem 1.5rem;margin:1.2rem 0;}
+  .quiz-q{font-family:'Fraunces',serif;font-weight:600;margin-bottom:.9rem;font-size:1.02rem;}
+  .quiz-opts{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.6rem;}
+  .quiz-opt{text-align:left;background:#fff;border:1px solid rgba(38,33,28,.2);padding:.7rem .9rem;border-radius:3px;cursor:pointer;font-size:.92rem;transition:.15s;}
+  .quiz-opt:hover{border-color:var(--bordeaux);}
+  .quiz-opt.correct{background:var(--teal-light);border-color:var(--ok);color:var(--ok);font-weight:600;}
+  .quiz-opt.incorrect{background:var(--bad-light);border-color:var(--bad);color:var(--bad);}
+  .quiz-feedback{font-size:.85rem;font-style:italic;min-height:1.2rem;}
+
+  .page-nav{
+    position:sticky;bottom:0;background:var(--bordeaux-dark);display:flex;justify-content:space-between;
+    align-items:center;padding:.9rem 1.5rem;margin-top:4rem;flex-wrap:wrap;gap:.5rem;
+  }
+  .page-nav a{
+    font-family:'Space Mono',monospace;font-size:.75rem;color:var(--linen-light);text-decoration:none;
+    padding:.55rem 1rem;border:1px solid rgba(237,230,214,.35);border-radius:3px;
+  }
+  .page-nav a:hover{background:rgba(201,161,90,.15);border-color:var(--gold);}
+  footer.site-footer{text-align:center;padding:2rem 1.5rem 1rem;font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(38,33,28,.5);}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="back" href="index.html">← Índice del curso</a>
+  <span class="crumb">Unidad 03 · El Bar · Tema 3</span>
+</nav>
+
+<header class="hero">
+  <div class="unit-tag">Unidad 03 · El Bar</div>
+  <h1 class="title">Clasificación de Bebidas Alcohólicas</h1>
+  <p class="subtitle">Fermentadas, destiladas, licores, espirituosas, fortificadas y aguardientes</p>
+</header>
+
+<main>
+
+  <p class="lead">Toda bebida alcohólica parte del mismo principio químico —azúcares transformados en
+  alcohol por acción de levaduras— pero el camino que sigue después de eso determina en qué categoría
+  termina: si se detiene ahí, si se destila, si se le añaden aromas, o si se fortifica con alcohol extra.</p>
+
+  <h2 class="section-title"><span class="num">10.1</span> Del fermento a la copa: el proceso</h2>
+  <p class="hint">Toca cada etapa del proceso para ver qué categorías se definen ahí.</p>
+
+  <div class="pipeline">
+    <div class="pipe-track" id="pipe-track"></div>
+    <div class="pipe-detail" id="pipe-detail"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">10.2</span> Comparador de graduación alcohólica</h2>
+  <p class="hint">Selecciona una categoría para ver su rango típico de alcohol por volumen (% ABV):</p>
+
+  <div class="gauge-tool">
+    <div class="gauge-svg-wrap">
+      <svg width="220" height="120" viewBox="0 0 220 120">
+        <path d="M10 110 A100 100 0 0 1 210 110" fill="none" stroke="rgba(38,33,28,.12)" stroke-width="14"/>
+        <path d="M10 110 A100 100 0 0 1 210 110" fill="none" stroke="var(--gold)" stroke-width="14" stroke-dasharray="314" stroke-dashoffset="0" opacity=".35"/>
+      </svg>
+      <div class="needle" id="needle"></div>
+    </div>
+    <div class="gauge-readout">
+      <div class="gv" id="gauge-value">–</div>
+      <div class="gn" id="gauge-name">Elige una categoría</div>
+    </div>
+    <div class="gauge-btns" id="gauge-btns"></div>
+  </div>
+
+  <h2 class="section-title"><span class="num">10.3</span> Las seis categorías</h2>
+  <div class="cat-grid" id="cat-grid"></div>
+
+  <h2 class="section-title"><span class="num">10.4</span> Clasifica cada bebida</h2>
+  <p class="hint">Toca la categoría correcta para cada bebida.</p>
+  <div class="sort-box" id="sort-box"></div>
+
+  <h2 class="section-title"><span class="num">10.5</span> Autoevaluación</h2>
+
+  <div class="quiz-box">
+    <div class="quiz-q">1. ¿Qué diferencia principal hay entre una bebida fermentada y una destilada?</div>
+    <div class="quiz-opts" data-answer="1">
+      <button class="quiz-opt">Ninguna, son sinónimos</button>
+      <button class="quiz-opt">La destilada pasa por un proceso adicional que concentra el alcohol</button>
+      <button class="quiz-opt">La fermentada siempre tiene más alcohol</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">2. ¿Qué caracteriza a un licor frente a un destilado puro?</div>
+    <div class="quiz-opts" data-answer="0">
+      <button class="quiz-opt">Se le añaden azúcares, frutas o hierbas</button>
+      <button class="quiz-opt">Nunca contiene alcohol</button>
+      <button class="quiz-opt">Se elabora exclusivamente con agave</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+  <div class="quiz-box">
+    <div class="quiz-q">3. ¿Cómo se obtiene un vino fortificado, como el jerez o el oporto?</div>
+    <div class="quiz-opts" data-answer="2">
+      <button class="quiz-opt">Dejándolo fermentar el doble de tiempo</button>
+      <button class="quiz-opt">Filtrándolo varias veces</button>
+      <button class="quiz-opt">Añadiendo alcohol destilado durante o después de la fermentación</button>
+    </div>
+    <div class="quiz-feedback"></div>
+  </div>
+
+</main>
+
+<div class="page-nav">
+  <a href="u3-tipos-de-bar.html">← Anterior: Tipos de bar</a>
+  <a href="index.html">Índice</a>
+  <a href="u3-clasificacion-de-bebidas-no-alcoholicas.html">Siguiente: Bebidas no alcohólicas →</a>
+</div>
+
+<footer class="site-footer">Servicio de Alimentos y Bebidas — Unidad 03 · Tema: Clasificación de bebidas alcohólicas</footer>
+
+<script>
+// Pipeline
+const stages = [
+  {n:"Materia prima", d:"Uvas, granos, caña, agave o frutas aportan los azúcares base que después se transformarán en alcohol.", tags:["Punto de partida de todas las categorías"]},
+  {n:"Fermentación", d:"Las levaduras transforman los azúcares en alcohol y CO₂. Si el proceso se detiene aquí, la bebida ya es alcohólica.", tags:["Fermentadas: vino, cerveza, sidra"]},
+  {n:"Destilación", d:"El líquido fermentado se calienta para separar y concentrar el alcohol, aumentando considerablemente su graduación.", tags:["Destiladas / Espirituosas","Aguardientes"]},
+  {n:"Aromatización o fortificación", d:"Se añaden azúcares, frutas, hierbas (para licores) o alcohol destilado extra (para vinos fortificados).", tags:["Licores","Fortificadas"]},
+  {n:"Añejamiento y embotellado", d:"Muchas bebidas reposan en barrica para desarrollar color y aroma antes de embotellarse; otras se embotellan jóvenes.", tags:["Aplica a la mayoría de las categorías"]}
+];
+const pipeTrack = document.getElementById('pipe-track');
+const pipeDetail = document.getElementById('pipe-detail');
+stages.forEach((s,i)=>{
+  const node = document.createElement('div');
+  node.className = 'pipe-node' + (i===0?' active':'');
+  node.innerHTML = `<div class="pn-circle">${i+1}</div><div class="pn-label">${s.n}</div>`;
+  node.addEventListener('click', ()=>{
+    document.querySelectorAll('.pipe-node').forEach(n=>n.classList.remove('active'));
+    node.classList.add('active');
+    renderPipeDetail(i);
+  });
+  pipeTrack.appendChild(node);
+});
+function renderPipeDetail(i){
+  const s = stages[i];
+  pipeDetail.innerHTML = `<h4>${i+1}. ${s.n}</h4><p>${s.d}</p>
+    <div class="pipe-tags">${s.tags.map(t=>`<span class="pipe-tag">${t}</span>`).join('')}</div>`;
+}
+renderPipeDetail(0);
+
+// Gauge
+const categories = [
+  {id:"fermentadas", n:"Fermentadas", min:4, max:15, ex:"Vino, cerveza, sidra, hidromiel, sake"},
+  {id:"destiladas", n:"Destiladas", min:35, max:50, ex:"Whisky, vodka, ron, tequila, ginebra, brandy"},
+  {id:"licores", n:"Licores", min:15, max:30, ex:"Baileys, Cointreau, Amaretto, Kahlúa"},
+  {id:"espirituosas", n:"Espirituosas", min:37, max:50, ex:"Vodka blanco, ginebra London Dry, ron blanco"},
+  {id:"fortificadas", n:"Fortificadas", min:15, max:22, ex:"Jerez, Oporto, Vermut, Madeira"},
+  {id:"aguardientes", n:"Aguardientes", min:29, max:60, ex:"Aguardiente de caña, pisco, grappa, orujo"}
+];
+const needle = document.getElementById('needle');
+const gaugeValue = document.getElementById('gauge-value');
+const gaugeName = document.getElementById('gauge-name');
+const gaugeBtns = document.getElementById('gauge-btns');
+categories.forEach(c=>{
+  const btn = document.createElement('button');
+  btn.className = 'gauge-btn';
+  btn.textContent = c.n;
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.gauge-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const avg = (c.min+c.max)/2;
+    const angle = Math.min(avg/60,1)*180 - 90;
+    needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+    gaugeValue.textContent = c.min+'–'+c.max+'% ABV';
+    gaugeName.textContent = c.n+' · '+c.ex;
+  });
+  gaugeBtns.appendChild(btn);
+});
+gaugeBtns.firstChild.click();
+
+// Category grid
+const catGrid = document.getElementById('cat-grid');
+categories.forEach(c=>{
+  const card = document.createElement('div');
+  card.className = 'cat-card';
+  card.innerHTML = `<div class="cn">${c.n}</div>
+    <p>Rango típico: <strong>${c.min}–${c.max}% ABV</strong></p>
+    <div class="cex">Ej: ${c.ex}</div>`;
+  catGrid.appendChild(card);
+});
+
+// Sorting game
+const drinks = [
+  {n:"Vino tinto", cat:"fermentadas"},
+  {n:"Whisky escocés", cat:"destiladas"},
+  {n:"Baileys", cat:"licores"},
+  {n:"Jerez (Sherry)", cat:"fortificadas"},
+  {n:"Pisco", cat:"aguardientes"},
+  {n:"Vodka blanco", cat:"espirituosas"},
+  {n:"Cerveza", cat:"fermentadas"},
+  {n:"Cointreau", cat:"licores"},
+  {n:"Vermut", cat:"fortificadas"},
+  {n:"Grappa", cat:"aguardientes"}
+];
+const sortBox = document.getElementById('sort-box');
+drinks.forEach(d=>{
+  const item = document.createElement('div');
+  item.className = 'sort-item';
+  const btnsHtml = categories.map(c=>`<button class="sort-btn" data-cat="${c.id}">${c.n}</button>`).join('');
+  item.innerHTML = `<div class="sort-name">${d.n}</div><div class="sort-btns">${btnsHtml}</div>`;
+  sortBox.appendChild(item);
+  item.querySelectorAll('.sort-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const btns = item.querySelectorAll('.sort-btn');
+      btns.forEach(b=>b.disabled=true);
+      if(btn.dataset.cat === d.cat){
+        btn.classList.add('correct');
+      }else{
+        btn.classList.add('incorrect');
+        item.querySelector('.sort-btn[data-cat="'+d.cat+'"]').classList.add('correct');
+      }
+    });
+  });
+});
+
+// Quiz
+document.querySelectorAll('.quiz-opts').forEach(group=>{
+  const correctIndex = parseInt(group.dataset.answer,10);
+  const opts = group.querySelectorAll('.quiz-opt');
+  const feedback = group.nextElementSibling;
+  opts.forEach((opt,i)=>{
+    opt.addEventListener('click', ()=>{
+      if(opt.classList.contains('correct')||opt.classList.contains('incorrect')) return;
+      opts.forEach(o=>o.disabled=true);
+      if(i===correctIndex){
+        opt.classList.add('correct');
+        feedback.textContent='¡Correcto!';
+        feedback.style.color='#3F5D58';
+      }else{
+        opt.classList.add('incorrect');
+        opts[correctIndex].classList.add('correct');
+        feedback.textContent='No es correcto — la respuesta correcta está marcada en verde.';
+        feedback.style.color='#8C3B3B';
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
